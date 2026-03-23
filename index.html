@@ -7,7 +7,7 @@
   <title>호중 ♥ 혜림 모바일 청첩장</title>
   <meta name="description" content="여기를 눌러 링크를 확인하세요." />
 
-  <!-- 🔥 썸네일 (완전 적용) -->
+  <!-- 썸네일 -->
   <meta property="og:type" content="website" />
   <meta property="og:title" content="호중 ♥ 혜림 모바일 청첩장" />
   <meta property="og:description" content="여기를 눌러 링크를 확인하세요." />
@@ -19,10 +19,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&family=Noto+Serif+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-
-
   <!-- 네이버 지도 -->
-  <script type="text/javascript" src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=xdbk82qijg&callback=initMap"></script>
+<script type="text/javascript" src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=xdbk82qijg&callback=initMap"></script>
 
     <script type="text/javascript">
         var map;
@@ -52,8 +50,8 @@
       margin: 0;
       font-family: "Noto Serif KR", "Nanum Myeongjo", serif;
       background:
-        radial-gradient(circle at top, rgba(255, 243, 247, 0.92) 0%, rgba(255, 249, 241, 0.96) 35%, rgba(255,255,255,1) 100%),
-        linear-gradient(180deg, #fffdf8 0%, #fff7fa 55%, #fffdfc 100%);
+        radial-gradient(circle at 85% 6%, rgba(255, 241, 196, 0.95) 0%, rgba(255, 245, 218, 0.72) 18%, rgba(255, 250, 238, 0.28) 36%, rgba(255,255,255,0) 55%),
+        linear-gradient(180deg, #fffdf6 0%, #fffaf0 36%, #fffaf7 68%, #fffdfc 100%);
       color: #4f403f;
       line-height: 1.8;
       overflow-x: hidden;
@@ -93,7 +91,10 @@
       font: inherit;
     }
 
-    .petals {
+    /* =========================
+       따사로운 햇빛 효과
+    ========================= */
+    .sunlight {
       position: fixed;
       inset: 0;
       pointer-events: none;
@@ -101,33 +102,103 @@
       z-index: 999;
     }
 
-    .petal {
+    .sun-glow {
       position: absolute;
-      top: -40px;
-      width: 20px;
-      height: 20px;
+      top: -12vh;
+      right: -8vw;
+      width: 52vw;
+      height: 52vw;
+      max-width: 420px;
+      max-height: 420px;
+      border-radius: 50%;
       background:
-        radial-gradient(circle at 28% 28%, #fffdfd 0%, #ffeef5 28%, #ffdbe8 62%, #f8c6d7 100%);
-      border-radius: 75% 0 75% 0;
-      opacity: 0.78;
-      animation-name: fall;
-      animation-timing-function: linear;
-      animation-iteration-count: infinite;
-      filter: blur(0.15px);
-      box-shadow: 0 2px 6px rgba(228, 175, 196, 0.18);
+        radial-gradient(circle,
+          rgba(255, 246, 210, 0.78) 0%,
+          rgba(255, 236, 170, 0.45) 24%,
+          rgba(255, 228, 150, 0.20) 45%,
+          rgba(255, 220, 120, 0.08) 60%,
+          rgba(255, 255, 255, 0) 75%);
+      filter: blur(10px);
+      animation: sunlightPulse 5.5s ease-in-out infinite;
     }
 
-    @keyframes fall {
+    .sunbeam {
+      position: absolute;
+      top: -18vh;
+      right: 4vw;
+      width: 140px;
+      height: 140vh;
+      transform-origin: top center;
+      background: linear-gradient(
+        to bottom,
+        rgba(255, 245, 200, 0.34) 0%,
+        rgba(255, 241, 190, 0.18) 32%,
+        rgba(255, 246, 220, 0.06) 68%,
+        rgba(255, 255, 255, 0) 100%
+      );
+      filter: blur(10px);
+      border-radius: 999px;
+      mix-blend-mode: screen;
+    }
+
+    .beam1 {
+      transform: rotate(18deg);
+      opacity: 0.9;
+    }
+
+    .beam2 {
+      right: 12vw;
+      width: 110px;
+      transform: rotate(28deg);
+      opacity: 0.55;
+    }
+
+    .beam3 {
+      right: -1vw;
+      width: 88px;
+      transform: rotate(9deg);
+      opacity: 0.45;
+    }
+
+    .dusts {
+      position: absolute;
+      inset: 0;
+    }
+
+    .dust {
+      position: absolute;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,255,0.95) 0%, rgba(255,244,210,0.55) 45%, rgba(255,255,255,0) 72%);
+      animation: dustFloat linear infinite;
+      opacity: 0;
+      filter: blur(0.4px);
+    }
+
+    @keyframes sunlightPulse {
+      0%, 100% {
+        transform: scale(1);
+        opacity: 0.9;
+      }
+      50% {
+        transform: scale(1.06);
+        opacity: 1;
+      }
+    }
+
+    @keyframes dustFloat {
       0% {
-        transform: translate3d(0, -30px, 0) rotate(0deg) scale(0.9);
+        transform: translate3d(0, 18px, 0) scale(0.9);
         opacity: 0;
       }
-      12% {
-        opacity: 0.95;
+      15% {
+        opacity: 0.55;
+      }
+      50% {
+        opacity: 0.38;
       }
       100% {
-        transform: translate3d(var(--moveX), 110vh, 0) rotate(540deg) scale(1.05);
-        opacity: 0.12;
+        transform: translate3d(var(--moveX), -120px, 0) scale(1.15);
+        opacity: 0;
       }
     }
 
@@ -176,7 +247,7 @@
     .hero img {
       height: 64vh;
       object-fit: cover;
-      filter: sepia(0.08) brightness(1.04) saturate(0.92);
+      filter: sepia(0.12) brightness(1.08) saturate(0.98) contrast(0.98);
     }
 
     .hero::before {
@@ -184,7 +255,8 @@
       position: absolute;
       inset: 0;
       background:
-        linear-gradient(to bottom, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0.02) 35%, rgba(70,42,50,0.15) 100%);
+        radial-gradient(circle at 82% 12%, rgba(255, 243, 202, 0.34) 0%, rgba(255, 235, 185, 0.18) 18%, rgba(255,255,255,0) 36%),
+        linear-gradient(to bottom, rgba(255,255,255,0.08) 0%, rgba(255,249,232,0.04) 28%, rgba(70,42,50,0.15) 100%);
       z-index: 1;
     }
 
@@ -891,7 +963,13 @@
   </style>
 </head>
 <body>
-  <div class="petals" id="petals"></div>
+  <div class="sunlight" aria-hidden="true">
+    <span class="sunbeam beam1"></span>
+    <span class="sunbeam beam2"></span>
+    <span class="sunbeam beam3"></span>
+    <div class="sun-glow"></div>
+    <div class="dusts" id="dusts"></div>
+  </div>
 
   <div class="music-controller">
     <button id="musicToggle" class="music-btn" type="button" aria-label="배경음악 재생 또는 정지">
@@ -935,7 +1013,7 @@
 가장 빛나는 5월의 순간,
 저희의 시작을 함께해 주시면
 큰 기쁨이 되겠습니다.
-.</div>
+</div>
 
       <div class="names">
         신랑 <strong>이호중</strong> · 신부 <strong>박혜림</strong><br />
@@ -1013,7 +1091,6 @@
       <div class="title">마음 전하실 곳</div>
 
       <div class="account-box">
-        <!-- 신랑 계좌 -->
         <div class="account-card">
           <div class="account-title">신랑 계좌</div>
           <div class="parent-grid">
@@ -1028,7 +1105,6 @@
           </div>
         </div>
 
-        <!-- 신랑 부모님 계좌: 가로 배치 -->
         <div class="account-card">
           <div class="account-title">신랑 부모님 계좌</div>
           <div class="parent-grid">
@@ -1052,7 +1128,6 @@
           </div>
         </div>
 
-        <!-- 신부 계좌 -->
         <div class="account-card">
           <div class="account-title">신부 계좌</div>
           <div class="parent-grid">
@@ -1067,7 +1142,6 @@
           </div>
         </div>
 
-        <!-- 신부 부모님 계좌: 가로 배치 -->
         <div class="account-card">
           <div class="account-title">신부 부모님 계좌</div>
           <div class="parent-grid">
@@ -1202,28 +1276,30 @@
     const guestbookCollection = db.collection("guestbook");
 
     /* =========================================
-       꽃잎 효과
+       따사로운 햇빛 + 공기 입자 효과
     ========================================= */
-    const petalsWrap = document.getElementById("petals");
+    const dustsWrap = document.getElementById("dusts");
 
-    for (let i = 0; i < 34; i++) {
-      const petal = document.createElement("span");
-      petal.className = "petal";
+    for (let i = 0; i < 26; i++) {
+      const dust = document.createElement("span");
+      dust.className = "dust";
 
-      const left = Math.random() * 100;
-      const size = 12 + Math.random() * 14;
-      const duration = 9 + Math.random() * 9;
-      const delay = Math.random() * 10;
-      const moveX = (Math.random() * 220 - 110).toFixed(0) + "px";
+      const left = 52 + Math.random() * 46;
+      const top = 6 + Math.random() * 70;
+      const size = 3 + Math.random() * 7;
+      const duration = 8 + Math.random() * 9;
+      const delay = Math.random() * 12;
+      const moveX = (Math.random() * 90 - 45).toFixed(0) + "px";
 
-      petal.style.left = left + "vw";
-      petal.style.width = size + "px";
-      petal.style.height = size + "px";
-      petal.style.animationDuration = duration + "s";
-      petal.style.animationDelay = delay + "s";
-      petal.style.setProperty("--moveX", moveX);
+      dust.style.left = left + "vw";
+      dust.style.top = top + "vh";
+      dust.style.width = size + "px";
+      dust.style.height = size + "px";
+      dust.style.animationDuration = duration + "s";
+      dust.style.animationDelay = delay + "s";
+      dust.style.setProperty("--moveX", moveX);
 
-      petalsWrap.appendChild(petal);
+      dustsWrap.appendChild(dust);
     }
 
     /* =========================================
