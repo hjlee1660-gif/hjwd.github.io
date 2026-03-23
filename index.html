@@ -660,6 +660,12 @@
       border: none;
     }
 
+    .guestbook-btn.danger {
+      background: #fff4f6;
+      border: 1px solid #f0c2cf;
+      color: #b34f71;
+    }
+
     .guestbook-empty {
       color: #8c7a81;
       font-size: 0.94rem;
@@ -710,14 +716,16 @@
       flex-wrap: wrap;
     }
 
-    .guestbook-edit-box {
+    .guestbook-edit-box,
+    .guestbook-delete-box {
       display: none;
       margin-top: 12px;
       padding-top: 12px;
       border-top: 1px solid #eddce4;
     }
 
-    .guestbook-edit-box.show {
+    .guestbook-edit-box.show,
+    .guestbook-delete-box.show {
       display: block;
     }
 
@@ -964,7 +972,7 @@
         <div class="contact-item">
           <div class="contact-title">신랑측</div>
           <div class="contact-links">
-            <a class="contact-link" href="tel:01055971415">신랑 전화</a>
+            <a class="contact-link" href="tel:01055971415">신랑♥</a>
             <a class="contact-link" href="tel:01035341415">신랑 아버님</a>
             <a class="contact-link" href="tel:01067831415">신랑 어머님</a>
           </div>
@@ -973,7 +981,7 @@
         <div class="contact-item">
           <div class="contact-title">신부측</div>
           <div class="contact-links">
-            <a class="contact-link" href="tel:01074647371">신부 전화</a>
+            <a class="contact-link" href="tel:01074647371">신부♥</a>
             <a class="contact-link" href="tel:01055117371">신부 아버님</a>
             <a class="contact-link" href="tel:01055116126">신부 어머님</a>
           </div>
@@ -1000,8 +1008,8 @@
           </div>
 
           <div class="guestbook-field">
-            <label class="guestbook-label" for="guestPassword">수정시 비밀번호</label>
-            <input id="guestPassword" class="guestbook-password" type="password" maxlength="20" placeholder="수정할 때 사용할 비밀번호" />
+            <label class="guestbook-label" for="guestPassword">수정/삭제 비밀번호</label>
+            <input id="guestPassword" class="guestbook-password" type="password" maxlength="20" placeholder="수정·삭제할 때 사용할 비밀번호" />
           </div>
 
           <div class="guestbook-actions">
@@ -1010,7 +1018,7 @@
 
           <div class="guestbook-help">
             작성한 글은 이 브라우저에 저장됩니다.<br />
-            글 수정은 입력한 비밀번호가 일치할 때만 가능합니다.
+            글 수정과 삭제는 입력한 비밀번호가 일치할 때만 가능합니다.
           </div>
         </div>
 
@@ -1361,7 +1369,7 @@
     });
 
     /* 방명록 */
-    const GUESTBOOK_STORAGE_KEY = "wedding_guestbook_posts_v1";
+    const GUESTBOOK_STORAGE_KEY = "wedding_guestbook_posts_v2";
 
     function escapeHtml(text) {
       return String(text)
@@ -1397,6 +1405,16 @@
       return `${yyyy}.${mm}.${dd} ${hh}:${mi}`;
     }
 
+    function closeAllGuestbookBoxes(currentItem = null) {
+      document.querySelectorAll(".guestbook-item").forEach((item) => {
+        if (currentItem && item === currentItem) return;
+        const editBox = item.querySelector(".guestbook-edit-box");
+        const deleteBox = item.querySelector(".guestbook-delete-box");
+        if (editBox) editBox.classList.remove("show");
+        if (deleteBox) deleteBox.classList.remove("show");
+      });
+    }
+
     function renderGuestbook() {
       const listEl = document.getElementById("guestbookList");
       const posts = loadGuestbookPosts().sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
@@ -1418,6 +1436,7 @@
 
             <div class="guestbook-item-actions">
               <button class="guestbook-btn guestbook-edit-open" type="button">수정하기</button>
+              <button class="guestbook-btn danger guestbook-delete-open" type="button">삭제하기</button>
             </div>
 
             <div class="guestbook-edit-box">
@@ -1441,6 +1460,18 @@
                 <button class="guestbook-btn guestbook-cancel-edit" type="button">취소</button>
               </div>
             </div>
+
+            <div class="guestbook-delete-box">
+              <div class="guestbook-field">
+                <label class="guestbook-label">비밀번호 확인</label>
+                <input class="guestbook-password delete-password" type="password" maxlength="20" placeholder="작성 때 입력한 비밀번호" />
+              </div>
+
+              <div class="guestbook-item-actions">
+                <button class="guestbook-btn danger guestbook-confirm-delete" type="button">삭제 확인</button>
+                <button class="guestbook-btn guestbook-cancel-delete" type="button">취소</button>
+              </div>
+            </div>
           </div>
         `;
       }).join("");
@@ -1453,7 +1484,23 @@
         btn.addEventListener("click", function () {
           const item = this.closest(".guestbook-item");
           const editBox = item.querySelector(".guestbook-edit-box");
+          const deleteBox = item.querySelector(".guestbook-delete-box");
+
+          closeAllGuestbookBoxes(item);
+          deleteBox.classList.remove("show");
           editBox.classList.toggle("show");
+        });
+      });
+
+      document.querySelectorAll(".guestbook-delete-open").forEach((btn) => {
+        btn.addEventListener("click", function () {
+          const item = this.closest(".guestbook-item");
+          const editBox = item.querySelector(".guestbook-edit-box");
+          const deleteBox = item.querySelector(".guestbook-delete-box");
+
+          closeAllGuestbookBoxes(item);
+          editBox.classList.remove("show");
+          deleteBox.classList.toggle("show");
         });
       });
 
@@ -1462,6 +1509,14 @@
           const item = this.closest(".guestbook-item");
           const editBox = item.querySelector(".guestbook-edit-box");
           editBox.classList.remove("show");
+        });
+      });
+
+      document.querySelectorAll(".guestbook-cancel-delete").forEach((btn) => {
+        btn.addEventListener("click", function () {
+          const item = this.closest(".guestbook-item");
+          const deleteBox = item.querySelector(".guestbook-delete-box");
+          deleteBox.classList.remove("show");
         });
       });
 
@@ -1510,6 +1565,37 @@
           showToast("방명록이 수정되었습니다.");
         });
       });
+
+      document.querySelectorAll(".guestbook-confirm-delete").forEach((btn) => {
+        btn.addEventListener("click", function () {
+          const item = this.closest(".guestbook-item");
+          const id = item.dataset.id;
+          const password = item.querySelector(".delete-password").value;
+
+          if (!password) {
+            showToast("비밀번호를 입력해 주세요.");
+            return;
+          }
+
+          const posts = loadGuestbookPosts();
+          const target = posts.find((post) => post.id === id);
+
+          if (!target) {
+            showToast("삭제할 글을 찾지 못했습니다.");
+            return;
+          }
+
+          if (target.password !== password) {
+            showToast("비밀번호가 일치하지 않습니다.");
+            return;
+          }
+
+          const filteredPosts = posts.filter((post) => post.id !== id);
+          saveGuestbookPosts(filteredPosts);
+          renderGuestbook();
+          showToast("방명록이 삭제되었습니다.");
+        });
+      });
     }
 
     document.getElementById("guestbookSubmit").addEventListener("click", function () {
@@ -1532,7 +1618,7 @@
       }
 
       if (!password) {
-        showToast("수정시 비밀번호를 입력해 주세요.");
+        showToast("수정/삭제 비밀번호를 입력해 주세요.");
         return;
       }
 
