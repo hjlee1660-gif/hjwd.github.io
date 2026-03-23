@@ -399,12 +399,13 @@
     .lightbox {
       position: fixed;
       inset: 0;
-      background: rgba(20, 12, 16, 0.9);
+      background: rgba(20, 12, 16, 0.94);
       display: none;
       align-items: center;
       justify-content: center;
       padding: 20px;
       z-index: 2000;
+      touch-action: pan-y;
     }
 
     .lightbox.show {
@@ -414,31 +415,95 @@
     .lightbox-content {
       position: relative;
       width: 100%;
-      max-width: 520px;
+      max-width: 560px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    .lightbox img {
+    .lightbox-stage {
+      width: 100%;
+      overflow: hidden;
+      border-radius: 18px;
+    }
+
+    .lightbox-track {
+      display: flex;
+      width: 100%;
+      transition: transform 0.28s ease;
+      will-change: transform;
+    }
+
+    .lightbox-slide {
+      min-width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+    }
+
+    .lightbox-slide img {
       width: 100%;
       max-height: 82vh;
       object-fit: contain;
       border-radius: 18px;
       box-shadow: 0 12px 28px rgba(0, 0, 0, 0.28);
       background: #fff;
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+
+    .lightbox-close,
+    .lightbox-nav {
+      position: absolute;
+      border: none;
+      cursor: pointer;
+      z-index: 3;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.18);
     }
 
     .lightbox-close {
-      position: absolute;
       top: -14px;
       right: -2px;
       width: 38px;
       height: 38px;
-      border: none;
       border-radius: 50%;
       background: rgba(255,255,255,0.92);
       color: #513d44;
       font-size: 1.3rem;
-      cursor: pointer;
-      box-shadow: 0 6px 16px rgba(0,0,0,0.18);
+    }
+
+    .lightbox-nav {
+      top: 50%;
+      transform: translateY(-50%);
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.9);
+      color: #513d44;
+      font-size: 1.2rem;
+    }
+
+    .lightbox-prev {
+      left: -10px;
+    }
+
+    .lightbox-next {
+      right: -10px;
+    }
+
+    .lightbox-counter {
+      position: absolute;
+      left: 50%;
+      bottom: -34px;
+      transform: translateX(-50%);
+      color: #fff;
+      font-size: 0.92rem;
+      font-weight: 700;
+      background: rgba(255,255,255,0.12);
+      padding: 6px 12px;
+      border-radius: 999px;
+      backdrop-filter: blur(4px);
     }
 
     @media (max-width: 420px) {
@@ -462,6 +527,22 @@
       .music-btn {
         font-size: 0.85rem;
         padding: 9px 12px;
+      }
+
+      .lightbox-content {
+        max-width: 100%;
+      }
+
+      .lightbox-prev {
+        left: 2px;
+      }
+
+      .lightbox-next {
+        right: 2px;
+      }
+
+      .lightbox-counter {
+        bottom: -30px;
       }
     }
   </style>
@@ -560,7 +641,7 @@
         <button class="gallery-item" type="button" data-full="images/photo14.jpg"><img src="images/photo14.jpg" alt="웨딩 사진 14" loading="lazy" /></button>
         <button class="gallery-item" type="button" data-full="images/photo15.jpg"><img src="images/photo15.jpg" alt="웨딩 사진 15" loading="lazy" /></button>
       </div>
-      <div class="small">사진을 누르면 크게 볼 수 있습니다.</div>
+      <div class="small">사진을 누른 뒤 좌우로 밀어 다음 사진을 볼 수 있습니다.</div>
     </section>
 
     <section class="section">
@@ -662,7 +743,12 @@
   <div class="lightbox" id="lightbox" aria-hidden="true">
     <div class="lightbox-content">
       <button class="lightbox-close" id="lightboxClose" type="button" aria-label="닫기">×</button>
-      <img id="lightboxImage" src="" alt="확대 사진" />
+      <button class="lightbox-nav lightbox-prev" id="lightboxPrev" type="button" aria-label="이전 사진">‹</button>
+      <div class="lightbox-stage" id="lightboxStage">
+        <div class="lightbox-track" id="lightboxTrack"></div>
+      </div>
+      <button class="lightbox-nav lightbox-next" id="lightboxNext" type="button" aria-label="다음 사진">›</button>
+      <div class="lightbox-counter" id="lightboxCounter">1 / 15</div>
     </div>
   </div>
 
@@ -692,35 +778,92 @@
     }
 
     const lightbox = document.getElementById("lightbox");
-    const lightboxImage = document.getElementById("lightboxImage");
     const lightboxClose = document.getElementById("lightboxClose");
+    const lightboxPrev = document.getElementById("lightboxPrev");
+    const lightboxNext = document.getElementById("lightboxNext");
+    const lightboxTrack = document.getElementById("lightboxTrack");
+    const lightboxStage = document.getElementById("lightboxStage");
+    const lightboxCounter = document.getElementById("lightboxCounter");
     const galleryItems = document.querySelectorAll(".gallery-item");
     const toast = document.getElementById("toast");
 
-    function openLightbox(src, alt) {
-      lightboxImage.src = src;
-      lightboxImage.alt = alt || "확대 사진";
+    const galleryImages = Array.from(galleryItems).map((item, index) => {
+      const img = item.querySelector("img");
+      return {
+        src: item.dataset.full,
+        alt: img ? img.alt : `웨딩 사진 ${index + 1}`
+      };
+    });
+
+    let currentIndex = 0;
+    let touchStartX = 0;
+    let touchCurrentX = 0;
+    let isDragging = false;
+
+    function renderSlides() {
+      lightboxTrack.innerHTML = "";
+      galleryImages.forEach((photo) => {
+        const slide = document.createElement("div");
+        slide.className = "lightbox-slide";
+
+        const image = document.createElement("img");
+        image.src = photo.src;
+        image.alt = photo.alt;
+        image.draggable = false;
+
+        slide.appendChild(image);
+        lightboxTrack.appendChild(slide);
+      });
+    }
+
+    function updateCounter() {
+      lightboxCounter.textContent = `${currentIndex + 1} / ${galleryImages.length}`;
+    }
+
+    function updateSlidePosition(animated = true) {
+      lightboxTrack.style.transition = animated ? "transform 0.28s ease" : "none";
+      lightboxTrack.style.transform = `translateX(-${currentIndex * 100}%)`;
+      updateCounter();
+    }
+
+    function openLightbox(index = 0) {
+      currentIndex = index;
+      renderSlides();
+      updateSlidePosition(false);
       lightbox.classList.add("show");
       lightbox.setAttribute("aria-hidden", "false");
       document.body.style.overflow = "hidden";
+      requestAnimationFrame(() => updateSlidePosition(true));
     }
 
     function closeLightbox() {
       lightbox.classList.remove("show");
       lightbox.setAttribute("aria-hidden", "true");
-      lightboxImage.src = "";
+      lightboxTrack.innerHTML = "";
       document.body.style.overflow = "";
+      isDragging = false;
     }
 
-    galleryItems.forEach((item) => {
+    function showPrev() {
+      currentIndex = (currentIndex - 1 + galleryImages.length) % galleryImages.length;
+      updateSlidePosition(true);
+    }
+
+    function showNext() {
+      currentIndex = (currentIndex + 1) % galleryImages.length;
+      updateSlidePosition(true);
+    }
+
+    galleryItems.forEach((item, index) => {
       item.addEventListener("click", () => {
-        const fullSrc = item.dataset.full;
-        const img = item.querySelector("img");
-        openLightbox(fullSrc, img ? img.alt : "확대 사진");
+        openLightbox(index);
       });
     });
 
     lightboxClose.addEventListener("click", closeLightbox);
+    lightboxPrev.addEventListener("click", showPrev);
+    lightboxNext.addEventListener("click", showNext);
+
     lightbox.addEventListener("click", (e) => {
       if (e.target === lightbox) {
         closeLightbox();
@@ -728,8 +871,45 @@
     });
 
     document.addEventListener("keydown", (e) => {
+      if (!lightbox.classList.contains("show")) return;
+
       if (e.key === "Escape") {
         closeLightbox();
+      } else if (e.key === "ArrowLeft") {
+        showPrev();
+      } else if (e.key === "ArrowRight") {
+        showNext();
+      }
+    });
+
+    lightboxStage.addEventListener("touchstart", (e) => {
+      if (!lightbox.classList.contains("show")) return;
+      touchStartX = e.touches[0].clientX;
+      touchCurrentX = touchStartX;
+      isDragging = true;
+      lightboxTrack.style.transition = "none";
+    }, { passive: true });
+
+    lightboxStage.addEventListener("touchmove", (e) => {
+      if (!isDragging) return;
+      touchCurrentX = e.touches[0].clientX;
+      const deltaX = touchCurrentX - touchStartX;
+      const offset = -currentIndex * lightboxStage.clientWidth + deltaX;
+      lightboxTrack.style.transform = `translateX(${offset}px)`;
+    }, { passive: true });
+
+    lightboxStage.addEventListener("touchend", () => {
+      if (!isDragging) return;
+      const deltaX = touchCurrentX - touchStartX;
+      const threshold = 50;
+      isDragging = false;
+
+      if (deltaX > threshold) {
+        showPrev();
+      } else if (deltaX < -threshold) {
+        showNext();
+      } else {
+        updateSlidePosition(true);
       }
     });
 
