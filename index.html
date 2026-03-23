@@ -6,8 +6,12 @@
   <title>호중 ♥ 혜림 모바일 청첩장</title>
   <meta name="description" content="호중과 혜림의 모바일 청첩장" />
 
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&family=Noto+Serif+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+
   <!-- 네이버 지도 -->
-<script type="text/javascript" src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=xdbk82qijg&callback=initMap"></script>
+  <script type="text/javascript" src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=xdbk82qijg&callback=initMap"></script>
 
     <script type="text/javascript">
         var map;
@@ -35,11 +39,31 @@
 
     body {
       margin: 0;
-      font-family: "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
-      background: linear-gradient(180deg, #fffafc 0%, #fff7fb 45%, #fffdfd 100%);
-      color: #4a3d42;
-      line-height: 1.7;
+      font-family: "Noto Serif KR", "Nanum Myeongjo", serif;
+      background:
+        radial-gradient(circle at top, rgba(255, 243, 247, 0.92) 0%, rgba(255, 249, 241, 0.96) 35%, rgba(255,255,255,1) 100%),
+        linear-gradient(180deg, #fffdf8 0%, #fff7fa 55%, #fffdfc 100%);
+      color: #4f403f;
+      line-height: 1.8;
       overflow-x: hidden;
+      position: relative;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        repeating-linear-gradient(
+          0deg,
+          rgba(160, 130, 110, 0.03) 0px,
+          rgba(160, 130, 110, 0.03) 1px,
+          transparent 1px,
+          transparent 6px
+        );
+      opacity: 0.35;
+      z-index: 0;
     }
 
     a {
@@ -69,28 +93,30 @@
     .petal {
       position: absolute;
       top: -40px;
-      width: 18px;
-      height: 18px;
-      background: radial-gradient(circle at 30% 30%, #ffeef4 0%, #ffd7e5 60%, #f8bfd2 100%);
-      border-radius: 70% 0 70% 0;
-      opacity: 0.8;
+      width: 20px;
+      height: 20px;
+      background:
+        radial-gradient(circle at 28% 28%, #fffdfd 0%, #ffeef5 28%, #ffdbe8 62%, #f8c6d7 100%);
+      border-radius: 75% 0 75% 0;
+      opacity: 0.78;
       animation-name: fall;
       animation-timing-function: linear;
       animation-iteration-count: infinite;
-      filter: blur(0.2px);
+      filter: blur(0.15px);
+      box-shadow: 0 2px 6px rgba(228, 175, 196, 0.18);
     }
 
     @keyframes fall {
       0% {
-        transform: translate3d(0, -30px, 0) rotate(0deg);
+        transform: translate3d(0, -30px, 0) rotate(0deg) scale(0.9);
         opacity: 0;
       }
-      10% {
-        opacity: 0.9;
+      12% {
+        opacity: 0.95;
       }
       100% {
-        transform: translate3d(var(--moveX), 110vh, 0) rotate(540deg);
-        opacity: 0.15;
+        transform: translate3d(var(--moveX), 110vh, 0) rotate(540deg) scale(1.05);
+        opacity: 0.12;
       }
     }
 
@@ -102,30 +128,33 @@
     }
 
     .music-btn {
-      border: 1px solid #efcfda;
-      background: rgba(255, 255, 255, 0.95);
-      color: #7b5462;
+      border: 1px solid #e9cfd6;
+      background: rgba(255, 253, 250, 0.94);
+      color: #7c5a5c;
       border-radius: 999px;
       padding: 10px 14px;
       font-size: 0.9rem;
       font-weight: 700;
-      box-shadow: 0 6px 14px rgba(170, 120, 140, 0.15);
+      box-shadow: 0 8px 20px rgba(170, 120, 140, 0.12);
       cursor: pointer;
       backdrop-filter: blur(6px);
     }
 
     .music-btn.playing {
-      background: linear-gradient(180deg, #f7d7e4 0%, #efbfd2 100%);
-      border: none;
+      background: linear-gradient(180deg, #f9e1e9 0%, #f2ccd8 100%);
+      border: 1px solid #e7c2cf;
     }
 
     .wrap {
       max-width: 480px;
       margin: 0 auto;
-      background: rgba(255, 255, 255, 0.92);
+      background: rgba(255, 252, 248, 0.9);
       min-height: 100vh;
       position: relative;
-      box-shadow: 0 0 30px rgba(120, 90, 100, 0.08);
+      box-shadow: 0 0 36px rgba(125, 98, 95, 0.08);
+      z-index: 1;
+      border-left: 1px solid rgba(218, 200, 188, 0.35);
+      border-right: 1px solid rgba(218, 200, 188, 0.35);
     }
 
     .hero {
@@ -134,20 +163,30 @@
     }
 
     .hero img {
-      height: 62vh;
+      height: 64vh;
       object-fit: cover;
+      filter: sepia(0.08) brightness(1.04) saturate(0.92);
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to bottom, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0.02) 35%, rgba(70,42,50,0.15) 100%);
+      z-index: 1;
     }
 
     .hero::after {
       content: "";
       position: absolute;
-      inset: 0;
-      background: linear-gradient(
-        to bottom,
-        rgba(255,255,255,0.08) 0%,
-        rgba(80,50,60,0.08) 50%,
-        rgba(40,20,28,0.38) 100%
-      );
+      left: 18px;
+      right: 18px;
+      top: 18px;
+      bottom: 18px;
+      border: 1px solid rgba(255, 243, 232, 0.48);
+      z-index: 2;
+      pointer-events: none;
     }
 
     .hero-text {
@@ -155,23 +194,25 @@
       left: 24px;
       right: 24px;
       bottom: 34px;
-      z-index: 2;
-      color: #fff;
+      z-index: 3;
+      color: #fffdfc;
       text-align: center;
+      text-shadow: 0 2px 10px rgba(80, 42, 52, 0.22);
     }
 
     .hero-sub {
-      font-size: 0.95rem;
-      letter-spacing: 0.18em;
+      font-size: 0.9rem;
+      letter-spacing: 0.22em;
       opacity: 0.95;
       margin-bottom: 10px;
     }
 
     .hero-title {
-      font-size: 2rem;
+      font-size: 2.15rem;
       font-weight: 700;
-      letter-spacing: 0.06em;
+      letter-spacing: 0.08em;
       margin: 0 0 12px;
+      font-family: "Nanum Myeongjo", serif;
     }
 
     .hero-date {
@@ -180,74 +221,126 @@
     }
 
     .section {
-      padding: 42px 24px;
+      padding: 44px 24px;
       text-align: center;
+      position: relative;
     }
 
     .section + .section {
-      border-top: 1px solid #f3e6ec;
+      border-top: 1px solid #f1e3e1;
     }
 
     .flower {
-      font-size: 1.3rem;
+      font-size: 1.25rem;
       margin-bottom: 10px;
-      color: #d38aa5;
+      color: #d79aae;
     }
 
     .title {
-      font-size: 1.45rem;
+      font-size: 1.48rem;
       font-weight: 700;
-      color: #7b5462;
+      color: #77575a;
       margin-bottom: 18px;
+      font-family: "Nanum Myeongjo", serif;
+      position: relative;
+      display: inline-block;
+      padding: 0 18px;
+    }
+
+    .title::before,
+    .title::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      width: 26px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent 0%, #d6b7a7 100%);
+    }
+
+    .title::before {
+      left: -18px;
+    }
+
+    .title::after {
+      right: -18px;
+      transform: rotate(180deg);
     }
 
     .message {
       font-size: 1rem;
-      color: #5a4b51;
+      color: #5c4c4c;
       white-space: pre-line;
+      line-height: 2;
     }
 
     .names {
       margin-top: 24px;
       font-size: 1.05rem;
-      line-height: 2;
+      line-height: 2.1;
+      color: #634f50;
     }
 
     .calendar-box {
-      background: #fff8fb;
-      border: 1px solid #f2dce5;
-      border-radius: 20px;
+      background: linear-gradient(180deg, #fffaf5 0%, #fff7fb 100%);
+      border: 1px solid #ecd9d3;
+      border-radius: 22px;
       padding: 24px 18px;
-      box-shadow: 0 8px 20px rgba(215, 170, 190, 0.12);
+      box-shadow: 0 10px 24px rgba(194, 160, 154, 0.12);
+      position: relative;
+    }
+
+    .calendar-box::before {
+      content: "";
+      position: absolute;
+      inset: 8px;
+      border: 1px solid rgba(224, 196, 184, 0.45);
+      border-radius: 16px;
+      pointer-events: none;
     }
 
     .calendar-month {
-      font-size: 1.1rem;
+      font-size: 1.08rem;
       font-weight: 700;
-      color: #b46685;
+      color: #b47a86;
       margin-bottom: 16px;
     }
 
     .calendar-date-main {
-      font-size: 1.6rem;
+      font-size: 1.62rem;
       font-weight: 800;
-      color: #6d4c58;
+      color: #694f51;
       margin-bottom: 8px;
+      font-family: "Nanum Myeongjo", serif;
     }
 
     .calendar-desc {
-      color: #76646a;
+      color: #7a6667;
       font-size: 0.96rem;
     }
 
     .info-card,
-    .account-card {
-      background: #ffffff;
-      border: 1px solid #f3e5eb;
-      border-radius: 20px;
+    .account-card,
+    .guestbook-form,
+    .guestbook-list {
+      background: linear-gradient(180deg, #fffdfb 0%, #fff9fb 100%);
+      border: 1px solid #efdfdb;
+      border-radius: 22px;
       padding: 20px 18px;
       text-align: left;
-      box-shadow: 0 8px 20px rgba(140, 105, 117, 0.08);
+      box-shadow: 0 10px 22px rgba(144, 110, 110, 0.07);
+      position: relative;
+    }
+
+    .info-card::before,
+    .account-card::before,
+    .guestbook-form::before,
+    .guestbook-list::before {
+      content: "";
+      position: absolute;
+      inset: 8px;
+      border: 1px solid rgba(230, 210, 201, 0.42);
+      border-radius: 16px;
+      pointer-events: none;
     }
 
     .info-row {
@@ -255,6 +348,8 @@
       gap: 10px;
       margin-bottom: 14px;
       align-items: flex-start;
+      position: relative;
+      z-index: 1;
     }
 
     .info-row:last-child {
@@ -277,26 +372,46 @@
       grid-template-columns: 1fr;
       gap: 10px;
       margin-top: 20px;
+      position: relative;
+      z-index: 1;
     }
 
-    .btn {
+    .btn,
+    .contact-link,
+    .account-action,
+    .guestbook-btn {
       display: inline-block;
-      width: 100%;
-      padding: 14px 12px;
+      padding: 12px 14px;
       border-radius: 999px;
-      font-size: 0.95rem;
+      font-size: 0.93rem;
       font-weight: 700;
       text-align: center;
-      border: 1px solid #efcfda;
-      background: #fff;
-      color: #7b5462;
-      box-shadow: 0 6px 14px rgba(170, 120, 140, 0.08);
+      border: 1px solid #ead2d8;
+      background: #fffdfa;
+      color: #7a5b5d;
+      box-shadow: 0 6px 14px rgba(170, 120, 140, 0.06);
       cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
 
-    .btn.primary {
-      background: linear-gradient(180deg, #f7d7e4 0%, #efbfd2 100%);
-      border: none;
+    .btn:hover,
+    .contact-link:hover,
+    .account-action:hover,
+    .guestbook-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 18px rgba(170, 120, 140, 0.1);
+    }
+
+    .btn.primary,
+    .guestbook-btn.primary {
+      background: linear-gradient(180deg, #f8e2e9 0%, #f1cfd9 100%);
+      border: 1px solid #e7c2cf;
+    }
+
+    .guestbook-btn.danger {
+      background: #fff5f6;
+      border: 1px solid #efc7d1;
+      color: #b25d77;
     }
 
     .map-box {
@@ -307,6 +422,8 @@
       overflow: hidden;
       border: 1px solid #f1dde6;
       background: #f8f5f7;
+      position: relative;
+      z-index: 1;
     }
 
     .gallery {
@@ -324,19 +441,21 @@
       cursor: pointer;
       border-radius: 18px;
       overflow: hidden;
-      box-shadow: 0 8px 18px rgba(110, 80, 90, 0.12);
+      box-shadow: 0 10px 20px rgba(110, 80, 90, 0.1);
     }
 
     .gallery-item img {
       border-radius: 18px;
       aspect-ratio: 1 / 1.2;
       object-fit: cover;
-      transition: transform 0.28s ease;
+      transition: transform 0.28s ease, filter 0.28s ease;
+      filter: sepia(0.04) brightness(1.02);
     }
 
     .gallery-item:active img,
     .gallery-item:hover img {
       transform: scale(1.03);
+      filter: sepia(0.02) brightness(1.05);
     }
 
     .contact-box,
@@ -346,19 +465,25 @@
       margin-top: 18px;
     }
 
-    .contact-item {
-      background: #fff8fb;
-      border: 1px solid #f1dde6;
+    .contact-item,
+    .parent-item {
+      background: linear-gradient(180deg, #fffaf6 0%, #fff7fb 100%);
+      border: 1px solid #f0dfdf;
       border-radius: 18px;
       padding: 16px;
       text-align: left;
+      position: relative;
+      z-index: 1;
     }
 
     .contact-title,
     .account-title {
       font-weight: 700;
-      color: #7b5462;
-      margin-bottom: 8px;
+      color: #76575a;
+      margin-bottom: 10px;
+      font-family: "Nanum Myeongjo", serif;
+      position: relative;
+      z-index: 1;
     }
 
     .contact-links,
@@ -366,30 +491,28 @@
       display: flex;
       gap: 8px;
       flex-wrap: wrap;
+      position: relative;
+      z-index: 1;
     }
 
-    .contact-link,
-    .account-action {
-      padding: 10px 14px;
-      border-radius: 999px;
-      border: 1px solid #eecfda;
-      background: #fff;
-      font-size: 0.92rem;
-      cursor: pointer;
-    }
-
-    .account-name {
+    .account-name,
+    .parent-name-bank {
       font-size: 0.96rem;
-      color: #745c65;
+      color: #785f61;
       margin-bottom: 6px;
+      position: relative;
+      z-index: 1;
     }
 
-    .account-number {
+    .account-number,
+    .parent-account {
       font-size: 1rem;
       font-weight: 700;
       color: #4a3d42;
       margin-bottom: 12px;
       word-break: break-all;
+      position: relative;
+      z-index: 1;
     }
 
     .parent-grid {
@@ -397,38 +520,23 @@
       grid-template-columns: 1fr 1fr;
       gap: 10px;
       margin-top: 12px;
-    }
-
-    .parent-item {
-      background: #fff8fb;
-      border: 1px solid #f1dde6;
-      border-radius: 16px;
-      padding: 14px 12px;
+      position: relative;
+      z-index: 1;
     }
 
     .parent-role {
       font-size: 0.9rem;
       font-weight: 700;
-      color: #9d627a;
+      color: #aa6f85;
       margin-bottom: 6px;
-    }
-
-    .parent-name-bank {
-      font-size: 0.93rem;
-      color: #745c65;
-      margin-bottom: 6px;
-      line-height: 1.5;
-    }
-
-    .parent-account {
-      font-size: 0.98rem;
-      font-weight: 700;
-      color: #4a3d42;
-      word-break: break-all;
+      position: relative;
+      z-index: 1;
     }
 
     .parent-copy {
       margin-top: 10px;
+      position: relative;
+      z-index: 1;
     }
 
     .small {
@@ -438,10 +546,11 @@
     }
 
     .footer {
-      padding: 36px 20px 54px;
+      padding: 38px 20px 56px;
       text-align: center;
-      color: #8a7880;
+      color: #8d7877;
       font-size: 0.9rem;
+      background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,247,250,0.65) 100%);
     }
 
     .toast {
@@ -583,25 +692,20 @@
       text-align: left;
     }
 
-    .guestbook-form,
-    .guestbook-list {
-      background: #ffffff;
-      border: 1px solid #f3e5eb;
-      border-radius: 20px;
-      padding: 18px;
-      box-shadow: 0 8px 20px rgba(140, 105, 117, 0.08);
-    }
-
     .guestbook-form-title,
     .guestbook-list-title {
       font-weight: 700;
       color: #7b5462;
       margin-bottom: 14px;
       font-size: 1rem;
+      position: relative;
+      z-index: 1;
     }
 
     .guestbook-field {
       margin-bottom: 12px;
+      position: relative;
+      z-index: 1;
     }
 
     .guestbook-field:last-child {
@@ -620,10 +724,10 @@
     .guestbook-textarea,
     .guestbook-password {
       width: 100%;
-      border: 1px solid #ead6df;
+      border: 1px solid #ead8da;
       border-radius: 14px;
       padding: 12px 14px;
-      background: #fffafc;
+      background: #fffdf9;
       color: #4a3d42;
       outline: none;
     }
@@ -631,7 +735,7 @@
     .guestbook-input:focus,
     .guestbook-textarea:focus,
     .guestbook-password:focus {
-      border-color: #d9a9bc;
+      border-color: #ddb3c1;
       background: #fff;
     }
 
@@ -645,43 +749,18 @@
       gap: 10px;
       flex-wrap: wrap;
       margin-top: 14px;
+      position: relative;
+      z-index: 1;
     }
 
-    .guestbook-btn {
-      border: 1px solid #efcfda;
-      background: #fff;
-      color: #7b5462;
-      border-radius: 999px;
-      padding: 10px 16px;
-      font-size: 0.92rem;
-      font-weight: 700;
-      cursor: pointer;
-      box-shadow: 0 6px 14px rgba(170, 120, 140, 0.08);
-    }
-
-    .guestbook-btn.primary {
-      background: linear-gradient(180deg, #f7d7e4 0%, #efbfd2 100%);
-      border: none;
-    }
-
-    .guestbook-btn.danger {
-      background: #fff4f6;
-      border: 1px solid #f0c2cf;
-      color: #b34f71;
-    }
-
-    .guestbook-empty {
-      color: #8c7a81;
-      font-size: 0.94rem;
-      text-align: center;
-      padding: 18px 0 6px;
-    }
-
+    .guestbook-empty,
     .guestbook-loading {
       color: #8c7a81;
       font-size: 0.94rem;
       text-align: center;
       padding: 18px 0 6px;
+      position: relative;
+      z-index: 1;
     }
 
     .guestbook-item {
@@ -746,6 +825,8 @@
       font-size: 0.88rem;
       color: #8c7a81;
       line-height: 1.6;
+      position: relative;
+      z-index: 1;
     }
 
     @media (max-width: 420px) {
@@ -834,19 +915,17 @@
 
 서로의 마음에 리듬을 맞추고
 서로의 시간에 온기를 더해
-높은음자리표의 박혜림의 선율과
-낮은음자리표의 이호중의 선율이
-인생이라는 하나의 곡안에서 조화를 이루어
+높은음자리표 박혜림의 선율과
+낮은음자리표 이호중의 선율이
+인생이라는 하나의 곡 안에서 조화를 이루어
 함께 걸어가고자 합니다.
 
 5월 봄날의 가장 고운 순간,
-저희의 결혼식에 여러분을 정중히 초대합니다</div>
+저희의 결혼식에 여러분을 정중히 초대합니다.</div>
 
       <div class="names">
-        신랑 <strong>이호중 · </strong>
-        신부 <strong>박혜림</strong><br />
+        신랑 <strong>이호중</strong> · 신부 <strong>박혜림</strong><br />
         드림
-
       </div>
     </section>
 
@@ -856,7 +935,7 @@
       <div class="calendar-box">
         <div class="calendar-month">2026. 05</div>
         <div class="calendar-date-main">5월 3일 일요일 오후 2시</div>
-        <div class="calendar-desc">봄의 한가운데에서, 저희의 시작을 함께해 주세요.</div>
+        <div class="calendar-desc">화창한 봄날, 저희 두 사람의 새 출발에 함께 자리해 주세요.</div>
       </div>
     </section>
 
@@ -911,10 +990,8 @@
         <button class="gallery-item" type="button" data-full="images/photo13.jpg"><img src="images/photo13.jpg" alt="웨딩 사진 13" loading="lazy" /></button>
         <button class="gallery-item" type="button" data-full="images/photo14.jpg"><img src="images/photo14.jpg" alt="웨딩 사진 14" loading="lazy" /></button>
         <button class="gallery-item" type="button" data-full="images/photo15.jpg"><img src="images/photo15.jpg" alt="웨딩 사진 15" loading="lazy" /></button>
-        <button class="gallery-item" type="button" data-full="images/photo15.jpg"><img src="images/photo16.jpg" alt="웨딩 사진 16" loading="lazy" /></button>
-
+        <button class="gallery-item" type="button" data-full="images/photo16.jpg"><img src="images/photo16.jpg" alt="웨딩 사진 16" loading="lazy" /></button>
       </div>
-      <div class="small">사진을 누르면 확대되고, 좌우로 밀어서 다음 사진을 볼 수 있습니다.</div>
     </section>
 
     <section class="section">
@@ -922,15 +999,22 @@
       <div class="title">마음 전하실 곳</div>
 
       <div class="account-box">
+        <!-- 신랑 계좌 -->
         <div class="account-card">
           <div class="account-title">신랑 계좌</div>
-          <div class="account-name">이호중 · 신한은행</div>
-          <div class="account-number">110-377-312681</div>
-          <div class="account-actions">
-            <button class="account-action copy-btn" type="button" data-copy="110-377-312681">계좌번호 복사</button>
+          <div class="parent-grid">
+            <div class="parent-item">
+              <div class="parent-role">신랑</div>
+              <div class="parent-name-bank">이호중 · 신한은행</div>
+              <div class="parent-account">110-377-312681</div>
+              <div class="parent-copy">
+                <button class="account-action copy-btn" type="button" data-copy="110-377-312681">계좌번호 복사</button>
+              </div>
+            </div>
           </div>
         </div>
 
+        <!-- 신랑 부모님 계좌: 가로 배치 -->
         <div class="account-card">
           <div class="account-title">신랑 부모님 계좌</div>
           <div class="parent-grid">
@@ -954,15 +1038,22 @@
           </div>
         </div>
 
+        <!-- 신부 계좌 -->
         <div class="account-card">
           <div class="account-title">신부 계좌</div>
-          <div class="account-name">박혜림 · 우리은행</div>
-          <div class="account-number">1002-855-839785</div>
-          <div class="account-actions">
-            <button class="account-action copy-btn" type="button" data-copy="1002-855-839785">계좌번호 복사</button>
+          <div class="parent-grid">
+            <div class="parent-item">
+              <div class="parent-role">신부</div>
+              <div class="parent-name-bank">박혜림 · 우리은행</div>
+              <div class="parent-account">1002-855-839785</div>
+              <div class="parent-copy">
+                <button class="account-action copy-btn" type="button" data-copy="1002-855-839785">계좌번호 복사</button>
+              </div>
+            </div>
           </div>
         </div>
 
+        <!-- 신부 부모님 계좌: 가로 배치 -->
         <div class="account-card">
           <div class="account-title">신부 부모님 계좌</div>
           <div class="parent-grid">
@@ -1073,7 +1164,7 @@
       </div>
 
       <button class="lightbox-nav lightbox-next" id="lightboxNext" type="button" aria-label="다음 사진">›</button>
-      <div class="lightbox-counter" id="lightboxCounter">1 / 15</div>
+      <div class="lightbox-counter" id="lightboxCounter">1 / 16</div>
     </div>
   </div>
 
@@ -1082,7 +1173,6 @@
   <script>
     /* =========================================
        Firebase 설정
-       반드시 본인 프로젝트 값으로 바꿔야 작동함
     ========================================= */
     const firebaseConfig = {
       apiKey: "여기에_API_KEY",
@@ -1102,15 +1192,15 @@
     ========================================= */
     const petalsWrap = document.getElementById("petals");
 
-    for (let i = 0; i < 22; i++) {
+    for (let i = 0; i < 34; i++) {
       const petal = document.createElement("span");
       petal.className = "petal";
 
       const left = Math.random() * 100;
-      const size = 10 + Math.random() * 16;
-      const duration = 7 + Math.random() * 8;
-      const delay = Math.random() * 8;
-      const moveX = (Math.random() * 160 - 80).toFixed(0) + "px";
+      const size = 12 + Math.random() * 14;
+      const duration = 9 + Math.random() * 9;
+      const delay = Math.random() * 10;
+      const moveX = (Math.random() * 220 - 110).toFixed(0) + "px";
 
       petal.style.left = left + "vw";
       petal.style.width = size + "px";
@@ -1600,7 +1690,7 @@
           }
 
           if (!newMessage) {
-            showToast("남기실 말을 입력해 주세요.");
+            showToast("내용을 입력해 주세요.");
             return;
           }
 
@@ -1609,27 +1699,31 @@
             return;
           }
 
-          const target = guestbookPosts.find((post) => post.id === id);
-
-          if (!target) {
-            showToast("수정할 글을 찾지 못했습니다.");
-            return;
-          }
-
-          const passwordHash = await sha256(password);
-
-          if (target.passwordHash !== passwordHash) {
-            showToast("비밀번호가 일치하지 않습니다.");
-            return;
-          }
-
           try {
-            await guestbookCollection.doc(id).update({
+            const docRef = guestbookCollection.doc(id);
+            const docSnap = await docRef.get();
+
+            if (!docSnap.exists) {
+              showToast("이미 삭제된 글입니다.");
+              return;
+            }
+
+            const data = docSnap.data();
+            const hashed = await sha256(password);
+
+            if (hashed !== data.passwordHash) {
+              showToast("비밀번호가 일치하지 않습니다.");
+              return;
+            }
+
+            await docRef.update({
               name: newName,
               message: newMessage,
-              updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+              updatedAt: new Date()
             });
-            showToast("방명록이 수정되었습니다.");
+
+            showToast("글이 수정되었습니다.");
+            item.querySelector(".guestbook-edit-box").classList.remove("show");
           } catch (error) {
             console.error(error);
             showToast("수정 중 오류가 발생했습니다.");
@@ -1648,23 +1742,25 @@
             return;
           }
 
-          const target = guestbookPosts.find((post) => post.id === id);
-
-          if (!target) {
-            showToast("삭제할 글을 찾지 못했습니다.");
-            return;
-          }
-
-          const passwordHash = await sha256(password);
-
-          if (target.passwordHash !== passwordHash) {
-            showToast("비밀번호가 일치하지 않습니다.");
-            return;
-          }
-
           try {
-            await guestbookCollection.doc(id).delete();
-            showToast("방명록이 삭제되었습니다.");
+            const docRef = guestbookCollection.doc(id);
+            const docSnap = await docRef.get();
+
+            if (!docSnap.exists) {
+              showToast("이미 삭제된 글입니다.");
+              return;
+            }
+
+            const data = docSnap.data();
+            const hashed = await sha256(password);
+
+            if (hashed !== data.passwordHash) {
+              showToast("비밀번호가 일치하지 않습니다.");
+              return;
+            }
+
+            await docRef.delete();
+            showToast("글이 삭제되었습니다.");
           } catch (error) {
             console.error(error);
             showToast("삭제 중 오류가 발생했습니다.");
@@ -1673,23 +1769,7 @@
       });
     }
 
-    function subscribeGuestbook() {
-      guestbookCollection
-        .orderBy("createdAtClient", "desc")
-        .onSnapshot((snapshot) => {
-          guestbookPosts = snapshot.docs.map((doc) => ({
-            id: doc.id,
-            ...doc.data()
-          }));
-          renderGuestbook();
-        }, (error) => {
-          console.error(error);
-          document.getElementById("guestbookList").innerHTML =
-            `<div class="guestbook-empty">방명록을 불러오지 못했습니다. Firebase 설정과 Firestore 규칙을 확인해 주세요.</div>`;
-        });
-    }
-
-    document.getElementById("guestbookSubmit").addEventListener("click", async function () {
+    async function submitGuestbook() {
       if (isSubmittingGuestbook) return;
 
       const nameEl = document.getElementById("guestName");
@@ -1706,38 +1786,27 @@
       }
 
       if (!message) {
-        showToast("남기실 말을 입력해 주세요.");
+        showToast("축하 메시지를 입력해 주세요.");
         return;
       }
 
       if (!password) {
-        showToast("수정/삭제 비밀번호를 입력해 주세요.");
+        showToast("비밀번호를 입력해 주세요.");
         return;
       }
 
-      if (name.length > 20) {
-        showToast("이름은 20자 이하로 입력해 주세요.");
-        return;
-      }
-
-      if (message.length > 300) {
-        showToast("메시지는 300자 이하로 입력해 주세요.");
-        return;
-      }
+      isSubmittingGuestbook = true;
 
       try {
-        isSubmittingGuestbook = true;
-
         const passwordHash = await sha256(password);
-        const now = new Date().toISOString();
 
         await guestbookCollection.add({
           name,
           message,
           passwordHash,
           createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-          updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-          createdAtClient: now
+          createdAtClient: new Date(),
+          updatedAt: null
         });
 
         nameEl.value = "";
@@ -1751,9 +1820,21 @@
       } finally {
         isSubmittingGuestbook = false;
       }
-    });
+    }
 
-    subscribeGuestbook();
+    document.getElementById("guestbookSubmit").addEventListener("click", submitGuestbook);
+
+    guestbookCollection.orderBy("createdAt", "desc").onSnapshot((snapshot) => {
+      guestbookPosts = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+      renderGuestbook();
+    }, (error) => {
+      console.error(error);
+      document.getElementById("guestbookList").innerHTML =
+        `<div class="guestbook-empty">방명록을 불러오지 못했습니다. Firebase 설정과 보안 규칙을 확인해 주세요.</div>`;
+    });
   </script>
 </body>
 </html>
