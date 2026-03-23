@@ -19,6 +19,11 @@
         }
     </script>
 
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
   <style>
     * {
       box-sizing: border-box;
@@ -571,7 +576,6 @@
       backdrop-filter: blur(4px);
     }
 
-    /* 방명록 */
     .guestbook-wrap {
       margin-top: 18px;
       display: grid;
@@ -667,6 +671,13 @@
     }
 
     .guestbook-empty {
+      color: #8c7a81;
+      font-size: 0.94rem;
+      text-align: center;
+      padding: 18px 0 6px;
+    }
+
+    .guestbook-loading {
       color: #8c7a81;
       font-size: 0.94rem;
       text-align: center;
@@ -846,7 +857,7 @@
         </div>
         <div class="info-row">
           <div class="label">주소</div>
-          <div class="value" id="venueAddress">두산동 860-1</div>
+          <div class="value" id="venueAddress">대구 수성구 용학로 106-7</div>
         </div>
         <div class="info-row">
           <div class="label">안내</div>
@@ -1017,14 +1028,16 @@
           </div>
 
           <div class="guestbook-help">
-            작성한 글은 이 브라우저에 저장됩니다.<br />
+            작성한 글은 모든 방문자에게 보입니다.<br />
             글 수정과 삭제는 입력한 비밀번호가 일치할 때만 가능합니다.
           </div>
         </div>
 
         <div class="guestbook-list">
           <div class="guestbook-list-title">남겨주신 마음</div>
-          <div id="guestbookList"></div>
+          <div id="guestbookList">
+            <div class="guestbook-loading">방명록을 불러오는 중입니다.</div>
+          </div>
         </div>
       </div>
     </section>
@@ -1052,6 +1065,27 @@
   <div class="toast" id="toast">복사되었습니다.</div>
 
   <script>
+    /* =========================
+       Firebase 설정
+       =========================
+       아래 값은 본인 Firebase 프로젝트 값으로 교체
+    */
+    const firebaseConfig = {
+      apiKey: "여기에_API_KEY",
+      authDomain: "여기에_PROJECT_ID.firebaseapp.com",
+      projectId: "여기에_PROJECT_ID",
+      storageBucket: "여기에_PROJECT_ID.appspot.com",
+      messagingSenderId: "여기에_SENDER_ID",
+      appId: "여기에_APP_ID"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const guestbookCollection = db.collection("guestbook");
+
+    /* =========================
+       공통 UI
+       ========================= */
     const petalsWrap = document.getElementById("petals");
 
     for (let i = 0; i < 22; i++) {
@@ -1106,6 +1140,9 @@
       });
     });
 
+    /* =========================
+       음악
+       ========================= */
     const bgm = document.getElementById("bgm");
     const musicToggle = document.getElementById("musicToggle");
     let isPlaying = false;
@@ -1173,6 +1210,9 @@
       setMusicButtonState(false);
     });
 
+    /* =========================
+       네이버 지도
+       ========================= */
     function setMapFallback(message) {
       const mapEl = document.getElementById("naverMap");
       mapEl.innerHTML = `
@@ -1198,7 +1238,7 @@
       const mapEl = document.getElementById("naverMap");
       const addressEl = document.getElementById("venueAddress");
       const venueName = "호텔수성 3층 피오니홀";
-      const address = addressEl ? addressEl.textContent.trim() : "두산동 860-1";
+      const address = addressEl ? addressEl.textContent.trim() : "대구 수성구 용학로 106-7";
 
       if (!(window.naver && window.naver.maps)) {
         setMapFallback("네이버 지도를 불러오지 못했습니다.<br>네이버클라우드 도메인 등록 상태를 확인해 주세요.");
@@ -1233,6 +1273,9 @@
       setTimeout(initNaverMap, 300);
     });
 
+    /* =========================
+       갤러리 라이트박스
+       ========================= */
     const lightbox = document.getElementById("lightbox");
     const lightboxClose = document.getElementById("lightboxClose");
     const lightboxPrev = document.getElementById("lightboxPrev");
@@ -1368,8 +1411,10 @@
       }
     });
 
-    /* 방명록 */
-    const GUESTBOOK_STORAGE_KEY = "wedding_guestbook_posts_v2";
+    /* =========================
+       방명록 - Firestore 공유형
+       ========================= */
+    let guestbookPosts = [];
 
     function escapeHtml(text) {
       return String(text)
@@ -1380,29 +1425,32 @@
         .replace(/'/g, "&#039;");
     }
 
-    function loadGuestbookPosts() {
-      try {
-        const raw = localStorage.getItem(GUESTBOOK_STORAGE_KEY);
-        const parsed = raw ? JSON.parse(raw) : [];
-        return Array.isArray(parsed) ? parsed : [];
-      } catch (error) {
-        return [];
+    function formatGuestbookDate(value) {
+      let date = null;
+
+      if (value && typeof value.toDate === "function") {
+        date = value.toDate();
+      } else if (value instanceof Date) {
+        date = value;
+      } else if (typeof value === "string" || typeof value === "number") {
+        date = new Date(value);
       }
-    }
 
-    function saveGuestbookPosts(posts) {
-      localStorage.setItem(GUESTBOOK_STORAGE_KEY, JSON.stringify(posts));
-    }
+      if (!date || Number.isNaN(date.getTime())) return "";
 
-    function formatGuestbookDate(dateString) {
-      const date = new Date(dateString);
-      if (Number.isNaN(date.getTime())) return "";
       const yyyy = date.getFullYear();
       const mm = String(date.getMonth() + 1).padStart(2, "0");
       const dd = String(date.getDate()).padStart(2, "0");
       const hh = String(date.getHours()).padStart(2, "0");
       const mi = String(date.getMinutes()).padStart(2, "0");
       return `${yyyy}.${mm}.${dd} ${hh}:${mi}`;
+    }
+
+    async function sha256(text) {
+      const msgUint8 = new TextEncoder().encode(text);
+      const hashBuffer = await crypto.subtle.digest("SHA-256", msgUint8);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      return hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
     }
 
     function closeAllGuestbookBoxes(currentItem = null) {
@@ -1417,14 +1465,13 @@
 
     function renderGuestbook() {
       const listEl = document.getElementById("guestbookList");
-      const posts = loadGuestbookPosts().sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
-      if (!posts.length) {
+      if (!guestbookPosts.length) {
         listEl.innerHTML = `<div class="guestbook-empty">아직 남겨진 글이 없습니다. 첫 번째 축하 메시지를 남겨 주세요.</div>`;
         return;
       }
 
-      listEl.innerHTML = posts.map((post) => {
+      listEl.innerHTML = guestbookPosts.map((post) => {
         return `
           <div class="guestbook-item" data-id="${post.id}">
             <div class="guestbook-item-top">
@@ -1521,7 +1568,7 @@
       });
 
       document.querySelectorAll(".guestbook-save-edit").forEach((btn) => {
-        btn.addEventListener("click", function () {
+        btn.addEventListener("click", async function () {
           const item = this.closest(".guestbook-item");
           const id = item.dataset.id;
           const newName = item.querySelector(".edit-name").value.trim();
@@ -1543,31 +1590,36 @@
             return;
           }
 
-          const posts = loadGuestbookPosts();
-          const target = posts.find((post) => post.id === id);
+          const target = guestbookPosts.find((post) => post.id === id);
 
           if (!target) {
             showToast("수정할 글을 찾지 못했습니다.");
             return;
           }
 
-          if (target.password !== password) {
+          const passwordHash = await sha256(password);
+
+          if (target.passwordHash !== passwordHash) {
             showToast("비밀번호가 일치하지 않습니다.");
             return;
           }
 
-          target.name = newName;
-          target.message = newMessage;
-          target.updatedAt = new Date().toISOString();
-
-          saveGuestbookPosts(posts);
-          renderGuestbook();
-          showToast("방명록이 수정되었습니다.");
+          try {
+            await guestbookCollection.doc(id).update({
+              name: newName,
+              message: newMessage,
+              updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            showToast("방명록이 수정되었습니다.");
+          } catch (error) {
+            console.error(error);
+            showToast("수정 중 오류가 발생했습니다.");
+          }
         });
       });
 
       document.querySelectorAll(".guestbook-confirm-delete").forEach((btn) => {
-        btn.addEventListener("click", function () {
+        btn.addEventListener("click", async function () {
           const item = this.closest(".guestbook-item");
           const id = item.dataset.id;
           const password = item.querySelector(".delete-password").value;
@@ -1577,28 +1629,48 @@
             return;
           }
 
-          const posts = loadGuestbookPosts();
-          const target = posts.find((post) => post.id === id);
+          const target = guestbookPosts.find((post) => post.id === id);
 
           if (!target) {
             showToast("삭제할 글을 찾지 못했습니다.");
             return;
           }
 
-          if (target.password !== password) {
+          const passwordHash = await sha256(password);
+
+          if (target.passwordHash !== passwordHash) {
             showToast("비밀번호가 일치하지 않습니다.");
             return;
           }
 
-          const filteredPosts = posts.filter((post) => post.id !== id);
-          saveGuestbookPosts(filteredPosts);
-          renderGuestbook();
-          showToast("방명록이 삭제되었습니다.");
+          try {
+            await guestbookCollection.doc(id).delete();
+            showToast("방명록이 삭제되었습니다.");
+          } catch (error) {
+            console.error(error);
+            showToast("삭제 중 오류가 발생했습니다.");
+          }
         });
       });
     }
 
-    document.getElementById("guestbookSubmit").addEventListener("click", function () {
+    function subscribeGuestbook() {
+      guestbookCollection
+        .orderBy("createdAt", "desc")
+        .onSnapshot((snapshot) => {
+          guestbookPosts = snapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data()
+          }));
+          renderGuestbook();
+        }, (error) => {
+          console.error(error);
+          document.getElementById("guestbookList").innerHTML =
+            `<div class="guestbook-empty">방명록을 불러오지 못했습니다. Firebase 설정을 확인해 주세요.</div>`;
+        });
+    }
+
+    document.getElementById("guestbookSubmit").addEventListener("click", async function () {
       const nameEl = document.getElementById("guestName");
       const messageEl = document.getElementById("guestMessage");
       const passwordEl = document.getElementById("guestPassword");
@@ -1622,28 +1694,29 @@
         return;
       }
 
-      const posts = loadGuestbookPosts();
+      try {
+        const passwordHash = await sha256(password);
 
-      posts.push({
-        id: String(Date.now()) + Math.random().toString(16).slice(2),
-        name,
-        message,
-        password,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-      });
+        await guestbookCollection.add({
+          name,
+          message,
+          passwordHash,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
 
-      saveGuestbookPosts(posts);
+        nameEl.value = "";
+        messageEl.value = "";
+        passwordEl.value = "";
 
-      nameEl.value = "";
-      messageEl.value = "";
-      passwordEl.value = "";
-
-      renderGuestbook();
-      showToast("방명록이 등록되었습니다.");
+        showToast("방명록이 등록되었습니다.");
+      } catch (error) {
+        console.error(error);
+        showToast("등록 중 오류가 발생했습니다.");
+      }
     });
 
-    renderGuestbook();
+    subscribeGuestbook();
   </script>
 </body>
 </html>
