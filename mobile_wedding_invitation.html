@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>모바일 청첩장</title>
+
+  <!-- 공유 미리보기 -->
+  <meta property="og:title" content="모바일 청첩장" />
+  <meta property="og:description" content="소중한 날, 함께 축복해 주세요." />
+  <meta property="og:image" content="./images/main.jpg" />
+
+  <style>
+    body {
+      margin: 0;
+      font-family: "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+      background: #f7f3ef;
+      color: #3f342c;
+    }
+
+    .wrap {
+      max-width: 520px;
+      margin: auto;
+    }
+
+    .hero {
+      position: relative;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .hero img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .hero-text {
+      position: absolute;
+      bottom: 40px;
+      width: 100%;
+      text-align: center;
+      color: #fff;
+    }
+
+    .section {
+      padding: 20px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+
+    .title {
+      text-align: center;
+      font-weight: bold;
+      margin-bottom: 14px;
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .gallery img {
+      width: 100%;
+      border-radius: 12px;
+      object-fit: cover;
+    }
+
+    .btn {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 10px 14px;
+      background: #b08968;
+      color: #fff;
+      border-radius: 20px;
+    }
+  </style>
+</head>
+
+<body>
+<div class="wrap">
+
+  <!-- 메인 -->
+  <div class="hero">
+    <img src="./images/main.jpg" />
+    <div class="hero-text">
+      <div>2026.10.17 SAT PM 1:00</div>
+      <h2>호중 ♥ 혜림</h2>
+      <div>결혼합니다</div>
+    </div>
+  </div>
+
+  <!-- 초대글 -->
+  <div class="section">
+    <div class="card">
+      <div class="title">초대합니다</div>
+      <div style="text-align:center;">
+        소중한 분들을 모시고<br/>
+        새로운 시작을 하려 합니다.<br/>
+        함께해 주시면 감사하겠습니다.
+      </div>
+    </div>
+  </div>
+
+  <!-- 예식정보 -->
+  <div class="section">
+    <div class="card">
+      <div class="title">예식 안내</div>
+      <div>2026년 10월 17일 토요일 오후 1시</div>
+      <div>라온제나호텔 5층</div>
+      <div>대구 수성구 범어천로 73</div>
+    </div>
+  </div>
+
+  <!-- 갤러리 (10장) -->
+  <div class="section">
+    <div class="card">
+      <div class="title">사진첩</div>
+      <div class="gallery">
+        <img src="./images/photo1.jpg">
+        <img src="./images/photo2.jpg">
+        <img src="./images/photo3.jpg">
+        <img src="./images/photo4.jpg">
+        <img src="./images/photo5.jpg">
+        <img src="./images/photo6.jpg">
+        <img src="./images/photo7.jpg">
+        <img src="./images/photo8.jpg">
+        <img src="./images/photo9.jpg">
+        <img src="./images/photo10.jpg">
+      </div>
+    </div>
+  </div>
+
+  <!-- 지도 -->
+  <div class="section">
+    <div class="card">
+      <div class="title">오시는 길</div>
+      <iframe
+        width="100%"
+        height="250"
+        src="https://www.google.com/maps?q=대구 수성구 범어천로 73&output=embed">
+      </iframe>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
