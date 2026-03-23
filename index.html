@@ -5,6 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>호중 ♥ 혜림 모바일 청첩장</title>
   <meta name="description" content="호중과 혜림의 모바일 청첩장" />
+
+  <!-- 네이버 지도 -->
+  <script
+    type="text/javascript"
+    src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=xdbk82qijg&submodules=geocoder"
+  ></script>
+
   <style>
     * {
       box-sizing: border-box;
@@ -33,7 +40,9 @@
       width: 100%;
     }
 
-    button {
+    button,
+    input,
+    textarea {
       font: inherit;
     }
 
@@ -253,7 +262,7 @@
 
     .btn-group {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr;
       gap: 10px;
       margin-top: 20px;
     }
@@ -276,6 +285,16 @@
     .btn.primary {
       background: linear-gradient(180deg, #f7d7e4 0%, #efbfd2 100%);
       border: none;
+    }
+
+    .map-box {
+      width: 100%;
+      height: 320px;
+      margin-top: 18px;
+      border-radius: 18px;
+      overflow: hidden;
+      border: 1px solid #f1dde6;
+      background: #f8f5f7;
     }
 
     .gallery {
@@ -515,10 +534,6 @@
         padding: 36px 18px;
       }
 
-      .btn-group {
-        grid-template-columns: 1fr;
-      }
-
       .music-controller {
         top: 10px;
         right: 10px;
@@ -527,6 +542,10 @@
       .music-btn {
         font-size: 0.85rem;
         padding: 9px 12px;
+      }
+
+      .map-box {
+        height: 280px;
       }
 
       .lightbox-content {
@@ -607,18 +626,27 @@
         </div>
         <div class="info-row">
           <div class="label">주소</div>
-          <div class="value">대구광역시 수성구 용학로 106-7</div>
+          <div class="value" id="venueAddress">대구광역시 수성구 용학로 106-7</div>
         </div>
         <div class="info-row">
           <div class="label">안내</div>
           <div class="value">주차 가능 / 지하철 수성못역 1번 출구 도보 25분</div>
         </div>
 
+        <div id="naverMap" class="map-box"></div>
+
         <div class="btn-group">
-          <a class="btn primary" href="https://map.kakao.com/link/search/호텔수성" target="_blank" rel="noopener">카카오맵</a>
-          <a class="btn" href="https://map.naver.com/p/search/호텔수성" target="_blank" rel="noopener">네이버지도</a>
+          <a
+            class="btn primary"
+            href="https://map.naver.com/p/search/%ED%98%B8%ED%85%94%EC%88%98%EC%84%B1"
+            target="_blank"
+            rel="noopener"
+          >
+            네이버지도 앱에서 열기
+          </a>
         </div>
       </div>
+      <div class="small">아래에 네이버 지도가 바로 표시됩니다.</div>
     </section>
 
     <section class="section">
@@ -641,7 +669,7 @@
         <button class="gallery-item" type="button" data-full="images/photo14.jpg"><img src="images/photo14.jpg" alt="웨딩 사진 14" loading="lazy" /></button>
         <button class="gallery-item" type="button" data-full="images/photo15.jpg"><img src="images/photo15.jpg" alt="웨딩 사진 15" loading="lazy" /></button>
       </div>
-      <div class="small">사진을 누른 뒤 좌우로 밀어 다음 사진을 볼 수 있습니다.</div>
+      <div class="small">사진을 누르면 확대되고, 좌우로 밀어서 다음 사진을 볼 수 있습니다.</div>
     </section>
 
     <section class="section">
@@ -744,9 +772,11 @@
     <div class="lightbox-content">
       <button class="lightbox-close" id="lightboxClose" type="button" aria-label="닫기">×</button>
       <button class="lightbox-nav lightbox-prev" id="lightboxPrev" type="button" aria-label="이전 사진">‹</button>
+
       <div class="lightbox-stage" id="lightboxStage">
         <div class="lightbox-track" id="lightboxTrack"></div>
       </div>
+
       <button class="lightbox-nav lightbox-next" id="lightboxNext" type="button" aria-label="다음 사진">›</button>
       <div class="lightbox-counter" id="lightboxCounter">1 / 15</div>
     </div>
@@ -777,6 +807,149 @@
       petalsWrap.appendChild(petal);
     }
 
+    const toast = document.getElementById("toast");
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add("show");
+      clearTimeout(window.__toastTimer);
+      window.__toastTimer = setTimeout(() => {
+        toast.classList.remove("show");
+      }, 1800);
+    }
+
+    async function copyText(text) {
+      try {
+        await navigator.clipboard.writeText(text);
+        showToast("계좌번호가 복사되었습니다.");
+      } catch (error) {
+        const temp = document.createElement("input");
+        temp.value = text;
+        document.body.appendChild(temp);
+        temp.select();
+        document.execCommand("copy");
+        document.body.removeChild(temp);
+        showToast("계좌번호가 복사되었습니다.");
+      }
+    }
+
+    document.querySelectorAll(".copy-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        copyText(btn.dataset.copy);
+      });
+    });
+
+    const bgm = document.getElementById("bgm");
+    const musicToggle = document.getElementById("musicToggle");
+    let isPlaying = false;
+    bgm.volume = 0.5;
+
+    function setMusicButtonState(playing) {
+      if (playing) {
+        musicToggle.textContent = "❚❚ 음악 끄기";
+        musicToggle.classList.add("playing");
+      } else {
+        musicToggle.textContent = "♪ 음악 켜기";
+        musicToggle.classList.remove("playing");
+      }
+    }
+
+    async function playMusic() {
+      try {
+        await bgm.play();
+        isPlaying = true;
+        setMusicButtonState(true);
+      } catch (error) {
+        isPlaying = false;
+        setMusicButtonState(false);
+      }
+    }
+
+    function pauseMusic() {
+      bgm.pause();
+      isPlaying = false;
+      setMusicButtonState(false);
+    }
+
+    musicToggle.addEventListener("click", async () => {
+      if (isPlaying) {
+        pauseMusic();
+      } else {
+        await playMusic();
+      }
+    });
+
+    window.addEventListener("load", async () => {
+      await playMusic();
+    });
+
+    async function tryPlayOnce() {
+      if (!isPlaying) {
+        await playMusic();
+      }
+      document.removeEventListener("touchstart", tryPlayOnce);
+      document.removeEventListener("click", tryPlayOnce);
+      document.removeEventListener("scroll", tryPlayOnce);
+    }
+
+    document.addEventListener("touchstart", tryPlayOnce, { passive: true });
+    document.addEventListener("click", tryPlayOnce);
+    document.addEventListener("scroll", tryPlayOnce, { passive: true });
+
+    bgm.addEventListener("play", () => {
+      isPlaying = true;
+      setMusicButtonState(true);
+    });
+
+    bgm.addEventListener("pause", () => {
+      isPlaying = false;
+      setMusicButtonState(false);
+    });
+
+    function initNaverMap() {
+      const address = document.getElementById("venueAddress").textContent.trim();
+
+      const map = new naver.maps.Map("naverMap", {
+        center: new naver.maps.LatLng(35.8251, 128.6236),
+        zoom: 16
+      });
+
+      naver.maps.Service.geocode(
+        { query: address },
+        function (status, response) {
+          if (status !== naver.maps.Service.Status.OK) return;
+
+          const item = response.v2.addresses[0];
+          if (!item) return;
+
+          const position = new naver.maps.LatLng(item.y, item.x);
+          map.setCenter(position);
+
+          const marker = new naver.maps.Marker({
+            position: position,
+            map: map
+          });
+
+          const infoWindow = new naver.maps.InfoWindow({
+            content: `
+              <div style="padding:10px 12px; font-size:13px; line-height:1.5;">
+                <strong>호텔수성 3층 피오니홀</strong><br/>
+                대구광역시 수성구 용학로 106-7
+              </div>
+            `
+          });
+
+          infoWindow.open(map, marker);
+        }
+      );
+    }
+
+    window.addEventListener("load", function () {
+      if (window.naver && window.naver.maps) {
+        initNaverMap();
+      }
+    });
+
     const lightbox = document.getElementById("lightbox");
     const lightboxClose = document.getElementById("lightboxClose");
     const lightboxPrev = document.getElementById("lightboxPrev");
@@ -785,7 +958,6 @@
     const lightboxStage = document.getElementById("lightboxStage");
     const lightboxCounter = document.getElementById("lightboxCounter");
     const galleryItems = document.querySelectorAll(".gallery-item");
-    const toast = document.getElementById("toast");
 
     const galleryImages = Array.from(galleryItems).map((item, index) => {
       const img = item.querySelector("img");
@@ -911,103 +1083,6 @@
       } else {
         updateSlidePosition(true);
       }
-    });
-
-    function showToast(message) {
-      toast.textContent = message;
-      toast.classList.add("show");
-      clearTimeout(window.__toastTimer);
-      window.__toastTimer = setTimeout(() => {
-        toast.classList.remove("show");
-      }, 1800);
-    }
-
-    async function copyText(text) {
-      try {
-        await navigator.clipboard.writeText(text);
-        showToast("계좌번호가 복사되었습니다.");
-      } catch (error) {
-        const temp = document.createElement("input");
-        temp.value = text;
-        document.body.appendChild(temp);
-        temp.select();
-        document.execCommand("copy");
-        document.body.removeChild(temp);
-        showToast("계좌번호가 복사되었습니다.");
-      }
-    }
-
-    document.querySelectorAll(".copy-btn").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        copyText(btn.dataset.copy);
-      });
-    });
-
-    const bgm = document.getElementById("bgm");
-    const musicToggle = document.getElementById("musicToggle");
-    let isPlaying = false;
-    bgm.volume = 0.5;
-
-    function setMusicButtonState(playing) {
-      if (playing) {
-        musicToggle.textContent = "❚❚ 음악 끄기";
-        musicToggle.classList.add("playing");
-      } else {
-        musicToggle.textContent = "♪ 음악 켜기";
-        musicToggle.classList.remove("playing");
-      }
-    }
-
-    async function playMusic() {
-      try {
-        await bgm.play();
-        isPlaying = true;
-        setMusicButtonState(true);
-      } catch (error) {
-        isPlaying = false;
-        setMusicButtonState(false);
-      }
-    }
-
-    function pauseMusic() {
-      bgm.pause();
-      isPlaying = false;
-      setMusicButtonState(false);
-    }
-
-    musicToggle.addEventListener("click", async () => {
-      if (isPlaying) {
-        pauseMusic();
-      } else {
-        await playMusic();
-      }
-    });
-
-    window.addEventListener("load", async () => {
-      await playMusic();
-    });
-
-    async function tryPlayOnce() {
-      if (!isPlaying) {
-        await playMusic();
-      }
-      document.removeEventListener("touchstart", tryPlayOnce);
-      document.removeEventListener("click", tryPlayOnce);
-      document.removeEventListener("scroll", tryPlayOnce);
-    }
-
-    document.addEventListener("touchstart", tryPlayOnce, { passive: true });
-    document.addEventListener("click", tryPlayOnce);
-    document.addEventListener("scroll", tryPlayOnce, { passive: true });
-
-    bgm.addEventListener("play", () => {
-      isPlaying = true;
-      setMusicButtonState(true);
-    });
-
-    bgm.addEventListener("pause", () => {
-      isPlaying = false;
-      setMusicButtonState(false);
     });
   </script>
 </body>
