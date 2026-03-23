@@ -7,11 +7,18 @@
   <meta name="description" content="호중과 혜림의 모바일 청첩장" />
 
   <!-- 네이버 지도 -->
-  <script
-    type="text/javascript"
-    src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=xdbk82qijg&submodules=geocoder"
-    onerror="window.__naverMapLoadFailed = true;"
-  ></script>
+<script type="text/javascript" src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=xdbk82qijg&callback=initMap"></script>
+
+    <script type="text/javascript">
+        var map;
+        function initMap()
+        {
+            var mapDiv = document.getElementById('map_canvas')
+
+            var map = new naver.maps.Map(mapDiv);
+        }
+    </script>
+
 
   <style>
     * {
@@ -381,6 +388,45 @@
       word-break: break-all;
     }
 
+    .parent-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .parent-item {
+      background: #fff8fb;
+      border: 1px solid #f1dde6;
+      border-radius: 16px;
+      padding: 14px 12px;
+    }
+
+    .parent-role {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #9d627a;
+      margin-bottom: 6px;
+    }
+
+    .parent-name-bank {
+      font-size: 0.93rem;
+      color: #745c65;
+      margin-bottom: 6px;
+      line-height: 1.5;
+    }
+
+    .parent-account {
+      font-size: 0.98rem;
+      font-weight: 700;
+      color: #4a3d42;
+      word-break: break-all;
+    }
+
+    .parent-copy {
+      margin-top: 10px;
+    }
+
     .small {
       font-size: 0.9rem;
       color: #8c7a81;
@@ -526,6 +572,171 @@
       backdrop-filter: blur(4px);
     }
 
+    /* 방명록 */
+    .guestbook-wrap {
+      margin-top: 18px;
+      display: grid;
+      gap: 16px;
+      text-align: left;
+    }
+
+    .guestbook-form,
+    .guestbook-list {
+      background: #ffffff;
+      border: 1px solid #f3e5eb;
+      border-radius: 20px;
+      padding: 18px;
+      box-shadow: 0 8px 20px rgba(140, 105, 117, 0.08);
+    }
+
+    .guestbook-form-title,
+    .guestbook-list-title {
+      font-weight: 700;
+      color: #7b5462;
+      margin-bottom: 14px;
+      font-size: 1rem;
+    }
+
+    .guestbook-field {
+      margin-bottom: 12px;
+    }
+
+    .guestbook-field:last-child {
+      margin-bottom: 0;
+    }
+
+    .guestbook-label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: #9d627a;
+    }
+
+    .guestbook-input,
+    .guestbook-textarea,
+    .guestbook-password {
+      width: 100%;
+      border: 1px solid #ead6df;
+      border-radius: 14px;
+      padding: 12px 14px;
+      background: #fffafc;
+      color: #4a3d42;
+      outline: none;
+    }
+
+    .guestbook-input:focus,
+    .guestbook-textarea:focus,
+    .guestbook-password:focus {
+      border-color: #d9a9bc;
+      background: #fff;
+    }
+
+    .guestbook-textarea {
+      min-height: 110px;
+      resize: vertical;
+    }
+
+    .guestbook-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+
+    .guestbook-btn {
+      border: 1px solid #efcfda;
+      background: #fff;
+      color: #7b5462;
+      border-radius: 999px;
+      padding: 10px 16px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 6px 14px rgba(170, 120, 140, 0.08);
+    }
+
+    .guestbook-btn.primary {
+      background: linear-gradient(180deg, #f7d7e4 0%, #efbfd2 100%);
+      border: none;
+    }
+
+    .guestbook-btn.danger {
+      background: #fff4f6;
+      border: 1px solid #f0c2cf;
+      color: #b34f71;
+    }
+
+    .guestbook-empty {
+      color: #8c7a81;
+      font-size: 0.94rem;
+      text-align: center;
+      padding: 18px 0 6px;
+    }
+
+    .guestbook-item {
+      border: 1px solid #f1dde6;
+      border-radius: 16px;
+      padding: 14px;
+      background: #fff8fb;
+    }
+
+    .guestbook-item + .guestbook-item {
+      margin-top: 12px;
+    }
+
+    .guestbook-item-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .guestbook-name {
+      font-weight: 700;
+      color: #7b5462;
+    }
+
+    .guestbook-date {
+      font-size: 0.82rem;
+      color: #9c8a91;
+      white-space: nowrap;
+    }
+
+    .guestbook-message {
+      color: #4c4044;
+      white-space: pre-line;
+      line-height: 1.6;
+      margin-bottom: 12px;
+    }
+
+    .guestbook-item-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .guestbook-edit-box,
+    .guestbook-delete-box {
+      display: none;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid #eddce4;
+    }
+
+    .guestbook-edit-box.show,
+    .guestbook-delete-box.show {
+      display: block;
+    }
+
+    .guestbook-help {
+      margin-top: 10px;
+      font-size: 0.88rem;
+      color: #8c7a81;
+      line-height: 1.6;
+    }
+
     @media (max-width: 420px) {
       .hero-title {
         font-size: 1.75rem;
@@ -563,6 +774,15 @@
 
       .lightbox-counter {
         bottom: -30px;
+      }
+
+      .parent-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .guestbook-item-top {
+        flex-direction: column;
+        align-items: flex-start;
       }
     }
   </style>
@@ -627,7 +847,7 @@
         </div>
         <div class="info-row">
           <div class="label">주소</div>
-          <div class="value" id="venueAddress">대구광역시 수성구 용학로 106-7</div>
+          <div class="value" id="venueAddress">두산동 860-1</div>
         </div>
         <div class="info-row">
           <div class="label">안내</div>
@@ -647,7 +867,6 @@
           </a>
         </div>
       </div>
-      <div class="small">아래에 네이버 지도가 바로 표시됩니다.</div>
     </section>
 
     <section class="section">
@@ -688,20 +907,25 @@
         </div>
 
         <div class="account-card">
-          <div class="account-title">신랑 아버님 계좌</div>
-          <div class="account-name">이응도 · 카카오뱅크</div>
-          <div class="account-number">3333-13-7609203</div>
-          <div class="account-actions">
-            <button class="account-action copy-btn" type="button" data-copy="3333-13-7609203">계좌번호 복사</button>
-          </div>
-        </div>
+          <div class="account-title">신랑 부모님 계좌</div>
+          <div class="parent-grid">
+            <div class="parent-item">
+              <div class="parent-role">아버님</div>
+              <div class="parent-name-bank">이응도 · 카카오뱅크</div>
+              <div class="parent-account">3333-13-7609203</div>
+              <div class="parent-copy">
+                <button class="account-action copy-btn" type="button" data-copy="3333-13-7609203">계좌번호 복사</button>
+              </div>
+            </div>
 
-        <div class="account-card">
-          <div class="account-title">신랑 어머님 계좌</div>
-          <div class="account-name">안미경 · 농협은행</div>
-          <div class="account-number">352-0303983913</div>
-          <div class="account-actions">
-            <button class="account-action copy-btn" type="button" data-copy="352-0303983913">계좌번호 복사</button>
+            <div class="parent-item">
+              <div class="parent-role">어머님</div>
+              <div class="parent-name-bank">안미경 · 농협은행</div>
+              <div class="parent-account">352-0303983913</div>
+              <div class="parent-copy">
+                <button class="account-action copy-btn" type="button" data-copy="352-0303983913">계좌번호 복사</button>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -715,20 +939,25 @@
         </div>
 
         <div class="account-card">
-          <div class="account-title">신부 아버님 계좌</div>
-          <div class="account-name">박승태 · 신한은행</div>
-          <div class="account-number">602-06-146036</div>
-          <div class="account-actions">
-            <button class="account-action copy-btn" type="button" data-copy="602-06-146036">계좌번호 복사</button>
-          </div>
-        </div>
+          <div class="account-title">신부 부모님 계좌</div>
+          <div class="parent-grid">
+            <div class="parent-item">
+              <div class="parent-role">아버님</div>
+              <div class="parent-name-bank">박승태 · 신한은행</div>
+              <div class="parent-account">602-06-146036</div>
+              <div class="parent-copy">
+                <button class="account-action copy-btn" type="button" data-copy="602-06-146036">계좌번호 복사</button>
+              </div>
+            </div>
 
-        <div class="account-card">
-          <div class="account-title">신부 어머님 계좌</div>
-          <div class="account-name">조경숙 · 신한은행</div>
-          <div class="account-number">110-293-080446</div>
-          <div class="account-actions">
-            <button class="account-action copy-btn" type="button" data-copy="110-293-080446">계좌번호 복사</button>
+            <div class="parent-item">
+              <div class="parent-role">어머님</div>
+              <div class="parent-name-bank">조경숙 · 신한은행</div>
+              <div class="parent-account">110-293-080446</div>
+              <div class="parent-copy">
+                <button class="account-action copy-btn" type="button" data-copy="110-293-080446">계좌번호 복사</button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -759,6 +988,46 @@
             <a class="contact-link" href="tel:01055117371">신부 아버님</a>
             <a class="contact-link" href="tel:01055116126">신부 어머님</a>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="flower">❀</div>
+      <div class="title">방명록</div>
+
+      <div class="guestbook-wrap">
+        <div class="guestbook-form">
+          <div class="guestbook-form-title">축하 메시지 남기기</div>
+
+          <div class="guestbook-field">
+            <label class="guestbook-label" for="guestName">이름</label>
+            <input id="guestName" class="guestbook-input" type="text" maxlength="20" placeholder="이름을 입력해 주세요" />
+          </div>
+
+          <div class="guestbook-field">
+            <label class="guestbook-label" for="guestMessage">남기실 말</label>
+            <textarea id="guestMessage" class="guestbook-textarea" maxlength="300" placeholder="축하 메시지를 남겨 주세요"></textarea>
+          </div>
+
+          <div class="guestbook-field">
+            <label class="guestbook-label" for="guestPassword">수정/삭제 비밀번호</label>
+            <input id="guestPassword" class="guestbook-password" type="password" maxlength="20" placeholder="수정·삭제할 때 사용할 비밀번호" />
+          </div>
+
+          <div class="guestbook-actions">
+            <button id="guestbookSubmit" class="guestbook-btn primary" type="button">글 남기기</button>
+          </div>
+
+          <div class="guestbook-help">
+            작성한 글은 이 브라우저에 저장됩니다.<br />
+            글 수정과 삭제는 입력한 비밀번호가 일치할 때만 가능합니다.
+          </div>
+        </div>
+
+        <div class="guestbook-list">
+          <div class="guestbook-list-title">남겨주신 마음</div>
+          <div id="guestbookList"></div>
         </div>
       </div>
     </section>
@@ -932,14 +1201,14 @@
       const mapEl = document.getElementById("naverMap");
       const addressEl = document.getElementById("venueAddress");
       const venueName = "호텔수성 3층 피오니홀";
-      const address = addressEl ? addressEl.textContent.trim() : "대구광역시 수성구 용학로 106-7";
+      const address = addressEl ? addressEl.textContent.trim() : "두산동 860-1";
 
-      if (window.__naverMapLoadFailed || !(window.naver && window.naver.maps)) {
+      if (!(window.naver && window.naver.maps)) {
         setMapFallback("네이버 지도를 불러오지 못했습니다.<br>네이버클라우드 도메인 등록 상태를 확인해 주세요.");
         return;
       }
 
-      const defaultPosition = new naver.maps.LatLng(35.8251, 128.6236);
+      const defaultPosition = new naver.maps.LatLng(35.8241852, 128.6193978);
 
       const map = new naver.maps.Map(mapEl, {
         center: defaultPosition,
@@ -961,28 +1230,6 @@
       });
 
       infoWindow.open(map, marker);
-
-      if (!(naver.maps.Service && naver.maps.Service.geocode)) {
-        return;
-      }
-
-      naver.maps.Service.geocode({ query: address }, function (status, response) {
-        if (
-          status !== naver.maps.Service.Status.OK ||
-          !response ||
-          !response.v2 ||
-          !response.v2.addresses ||
-          !response.v2.addresses.length
-        ) {
-          return;
-        }
-
-        const item = response.v2.addresses[0];
-        const position = new naver.maps.LatLng(Number(item.y), Number(item.x));
-
-        map.setCenter(position);
-        marker.setPosition(position);
-      });
     }
 
     window.addEventListener("load", function () {
@@ -1123,6 +1370,283 @@
         updateSlidePosition(true);
       }
     });
+
+    /* 방명록 */
+    const GUESTBOOK_STORAGE_KEY = "wedding_guestbook_posts_v2";
+
+    function escapeHtml(text) {
+      return String(text)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function loadGuestbookPosts() {
+      try {
+        const raw = localStorage.getItem(GUESTBOOK_STORAGE_KEY);
+        const parsed = raw ? JSON.parse(raw) : [];
+        return Array.isArray(parsed) ? parsed : [];
+      } catch (error) {
+        return [];
+      }
+    }
+
+    function saveGuestbookPosts(posts) {
+      localStorage.setItem(GUESTBOOK_STORAGE_KEY, JSON.stringify(posts));
+    }
+
+    function formatGuestbookDate(dateString) {
+      const date = new Date(dateString);
+      if (Number.isNaN(date.getTime())) return "";
+      const yyyy = date.getFullYear();
+      const mm = String(date.getMonth() + 1).padStart(2, "0");
+      const dd = String(date.getDate()).padStart(2, "0");
+      const hh = String(date.getHours()).padStart(2, "0");
+      const mi = String(date.getMinutes()).padStart(2, "0");
+      return `${yyyy}.${mm}.${dd} ${hh}:${mi}`;
+    }
+
+    function closeAllGuestbookBoxes(currentItem = null) {
+      document.querySelectorAll(".guestbook-item").forEach((item) => {
+        if (currentItem && item === currentItem) return;
+        const editBox = item.querySelector(".guestbook-edit-box");
+        const deleteBox = item.querySelector(".guestbook-delete-box");
+        if (editBox) editBox.classList.remove("show");
+        if (deleteBox) deleteBox.classList.remove("show");
+      });
+    }
+
+    function renderGuestbook() {
+      const listEl = document.getElementById("guestbookList");
+      const posts = loadGuestbookPosts().sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+      if (!posts.length) {
+        listEl.innerHTML = `<div class="guestbook-empty">아직 남겨진 글이 없습니다. 첫 번째 축하 메시지를 남겨 주세요.</div>`;
+        return;
+      }
+
+      listEl.innerHTML = posts.map((post) => {
+        return `
+          <div class="guestbook-item" data-id="${post.id}">
+            <div class="guestbook-item-top">
+              <div class="guestbook-name">${escapeHtml(post.name)}</div>
+              <div class="guestbook-date">${formatGuestbookDate(post.updatedAt || post.createdAt)}</div>
+            </div>
+
+            <div class="guestbook-message">${escapeHtml(post.message)}</div>
+
+            <div class="guestbook-item-actions">
+              <button class="guestbook-btn guestbook-edit-open" type="button">수정하기</button>
+              <button class="guestbook-btn danger guestbook-delete-open" type="button">삭제하기</button>
+            </div>
+
+            <div class="guestbook-edit-box">
+              <div class="guestbook-field">
+                <label class="guestbook-label">이름</label>
+                <input class="guestbook-input edit-name" type="text" maxlength="20" value="${escapeHtml(post.name)}" />
+              </div>
+
+              <div class="guestbook-field">
+                <label class="guestbook-label">남기실 말</label>
+                <textarea class="guestbook-textarea edit-message" maxlength="300">${escapeHtml(post.message)}</textarea>
+              </div>
+
+              <div class="guestbook-field">
+                <label class="guestbook-label">비밀번호 확인</label>
+                <input class="guestbook-password edit-password" type="password" maxlength="20" placeholder="작성 때 입력한 비밀번호" />
+              </div>
+
+              <div class="guestbook-item-actions">
+                <button class="guestbook-btn primary guestbook-save-edit" type="button">수정 저장</button>
+                <button class="guestbook-btn guestbook-cancel-edit" type="button">취소</button>
+              </div>
+            </div>
+
+            <div class="guestbook-delete-box">
+              <div class="guestbook-field">
+                <label class="guestbook-label">비밀번호 확인</label>
+                <input class="guestbook-password delete-password" type="password" maxlength="20" placeholder="작성 때 입력한 비밀번호" />
+              </div>
+
+              <div class="guestbook-item-actions">
+                <button class="guestbook-btn danger guestbook-confirm-delete" type="button">삭제 확인</button>
+                <button class="guestbook-btn guestbook-cancel-delete" type="button">취소</button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      bindGuestbookEvents();
+    }
+
+    function bindGuestbookEvents() {
+      document.querySelectorAll(".guestbook-edit-open").forEach((btn) => {
+        btn.addEventListener("click", function () {
+          const item = this.closest(".guestbook-item");
+          const editBox = item.querySelector(".guestbook-edit-box");
+          const deleteBox = item.querySelector(".guestbook-delete-box");
+
+          closeAllGuestbookBoxes(item);
+          deleteBox.classList.remove("show");
+          editBox.classList.toggle("show");
+        });
+      });
+
+      document.querySelectorAll(".guestbook-delete-open").forEach((btn) => {
+        btn.addEventListener("click", function () {
+          const item = this.closest(".guestbook-item");
+          const editBox = item.querySelector(".guestbook-edit-box");
+          const deleteBox = item.querySelector(".guestbook-delete-box");
+
+          closeAllGuestbookBoxes(item);
+          editBox.classList.remove("show");
+          deleteBox.classList.toggle("show");
+        });
+      });
+
+      document.querySelectorAll(".guestbook-cancel-edit").forEach((btn) => {
+        btn.addEventListener("click", function () {
+          const item = this.closest(".guestbook-item");
+          const editBox = item.querySelector(".guestbook-edit-box");
+          editBox.classList.remove("show");
+        });
+      });
+
+      document.querySelectorAll(".guestbook-cancel-delete").forEach((btn) => {
+        btn.addEventListener("click", function () {
+          const item = this.closest(".guestbook-item");
+          const deleteBox = item.querySelector(".guestbook-delete-box");
+          deleteBox.classList.remove("show");
+        });
+      });
+
+      document.querySelectorAll(".guestbook-save-edit").forEach((btn) => {
+        btn.addEventListener("click", function () {
+          const item = this.closest(".guestbook-item");
+          const id = item.dataset.id;
+          const newName = item.querySelector(".edit-name").value.trim();
+          const newMessage = item.querySelector(".edit-message").value.trim();
+          const password = item.querySelector(".edit-password").value;
+
+          if (!newName) {
+            showToast("이름을 입력해 주세요.");
+            return;
+          }
+
+          if (!newMessage) {
+            showToast("남기실 말을 입력해 주세요.");
+            return;
+          }
+
+          if (!password) {
+            showToast("비밀번호를 입력해 주세요.");
+            return;
+          }
+
+          const posts = loadGuestbookPosts();
+          const target = posts.find((post) => post.id === id);
+
+          if (!target) {
+            showToast("수정할 글을 찾지 못했습니다.");
+            return;
+          }
+
+          if (target.password !== password) {
+            showToast("비밀번호가 일치하지 않습니다.");
+            return;
+          }
+
+          target.name = newName;
+          target.message = newMessage;
+          target.updatedAt = new Date().toISOString();
+
+          saveGuestbookPosts(posts);
+          renderGuestbook();
+          showToast("방명록이 수정되었습니다.");
+        });
+      });
+
+      document.querySelectorAll(".guestbook-confirm-delete").forEach((btn) => {
+        btn.addEventListener("click", function () {
+          const item = this.closest(".guestbook-item");
+          const id = item.dataset.id;
+          const password = item.querySelector(".delete-password").value;
+
+          if (!password) {
+            showToast("비밀번호를 입력해 주세요.");
+            return;
+          }
+
+          const posts = loadGuestbookPosts();
+          const target = posts.find((post) => post.id === id);
+
+          if (!target) {
+            showToast("삭제할 글을 찾지 못했습니다.");
+            return;
+          }
+
+          if (target.password !== password) {
+            showToast("비밀번호가 일치하지 않습니다.");
+            return;
+          }
+
+          const filteredPosts = posts.filter((post) => post.id !== id);
+          saveGuestbookPosts(filteredPosts);
+          renderGuestbook();
+          showToast("방명록이 삭제되었습니다.");
+        });
+      });
+    }
+
+    document.getElementById("guestbookSubmit").addEventListener("click", function () {
+      const nameEl = document.getElementById("guestName");
+      const messageEl = document.getElementById("guestMessage");
+      const passwordEl = document.getElementById("guestPassword");
+
+      const name = nameEl.value.trim();
+      const message = messageEl.value.trim();
+      const password = passwordEl.value;
+
+      if (!name) {
+        showToast("이름을 입력해 주세요.");
+        return;
+      }
+
+      if (!message) {
+        showToast("남기실 말을 입력해 주세요.");
+        return;
+      }
+
+      if (!password) {
+        showToast("수정/삭제 비밀번호를 입력해 주세요.");
+        return;
+      }
+
+      const posts = loadGuestbookPosts();
+
+      posts.push({
+        id: String(Date.now()) + Math.random().toString(16).slice(2),
+        name,
+        message,
+        password,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      });
+
+      saveGuestbookPosts(posts);
+
+      nameEl.value = "";
+      messageEl.value = "";
+      passwordEl.value = "";
+
+      renderGuestbook();
+      showToast("방명록이 등록되었습니다.");
+    });
+
+    renderGuestbook();
   </script>
 </body>
 </html>
