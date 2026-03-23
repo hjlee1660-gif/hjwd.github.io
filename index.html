@@ -33,6 +33,10 @@
       width: 100%;
     }
 
+    button {
+      font: inherit;
+    }
+
     .petals {
       position: fixed;
       inset: 0;
@@ -69,10 +73,35 @@
       }
     }
 
+    .music-controller {
+      position: fixed;
+      top: 14px;
+      right: 14px;
+      z-index: 1100;
+    }
+
+    .music-btn {
+      border: 1px solid #efcfda;
+      background: rgba(255, 255, 255, 0.95);
+      color: #7b5462;
+      border-radius: 999px;
+      padding: 10px 14px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      box-shadow: 0 6px 14px rgba(170, 120, 140, 0.15);
+      cursor: pointer;
+      backdrop-filter: blur(6px);
+    }
+
+    .music-btn.playing {
+      background: linear-gradient(180deg, #f7d7e4 0%, #efbfd2 100%);
+      border: none;
+    }
+
     .wrap {
       max-width: 480px;
       margin: 0 auto;
-      background: rgba(255, 255, 255, 0.9);
+      background: rgba(255, 255, 255, 0.92);
       min-height: 100vh;
       position: relative;
       box-shadow: 0 0 30px rgba(120, 90, 100, 0.08);
@@ -190,7 +219,8 @@
       font-size: 0.96rem;
     }
 
-    .info-card {
+    .info-card,
+    .account-card {
       background: #ffffff;
       border: 1px solid #f3e5eb;
       border-radius: 20px;
@@ -230,6 +260,7 @@
 
     .btn {
       display: inline-block;
+      width: 100%;
       padding: 14px 12px;
       border-radius: 999px;
       font-size: 0.95rem;
@@ -239,6 +270,7 @@
       background: #fff;
       color: #7b5462;
       box-shadow: 0 6px 14px rgba(170, 120, 140, 0.08);
+      cursor: pointer;
     }
 
     .btn.primary {
@@ -253,14 +285,31 @@
       margin-top: 20px;
     }
 
-    .gallery img {
+    .gallery-item {
+      position: relative;
+      border: 0;
+      padding: 0;
+      background: transparent;
+      cursor: pointer;
       border-radius: 18px;
-      aspect-ratio: 1 / 1.2;
-      object-fit: cover;
+      overflow: hidden;
       box-shadow: 0 8px 18px rgba(110, 80, 90, 0.12);
     }
 
-    .contact-box {
+    .gallery-item img {
+      border-radius: 18px;
+      aspect-ratio: 1 / 1.2;
+      object-fit: cover;
+      transition: transform 0.28s ease;
+    }
+
+    .gallery-item:active img,
+    .gallery-item:hover img {
+      transform: scale(1.03);
+    }
+
+    .contact-box,
+    .account-box {
       display: grid;
       gap: 12px;
       margin-top: 18px;
@@ -274,24 +323,48 @@
       text-align: left;
     }
 
-    .contact-title {
+    .contact-title,
+    .account-title {
       font-weight: 700;
       color: #7b5462;
       margin-bottom: 8px;
     }
 
-    .contact-links {
+    .contact-links,
+    .account-actions {
       display: flex;
       gap: 8px;
       flex-wrap: wrap;
     }
 
-    .contact-link {
+    .contact-link,
+    .account-action {
       padding: 10px 14px;
       border-radius: 999px;
       border: 1px solid #eecfda;
       background: #fff;
       font-size: 0.92rem;
+      cursor: pointer;
+    }
+
+    .account-name {
+      font-size: 0.96rem;
+      color: #745c65;
+      margin-bottom: 6px;
+    }
+
+    .account-number {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #4a3d42;
+      margin-bottom: 12px;
+      word-break: break-all;
+    }
+
+    .small {
+      font-size: 0.9rem;
+      color: #8c7a81;
+      margin-top: 12px;
     }
 
     .footer {
@@ -301,10 +374,71 @@
       font-size: 0.9rem;
     }
 
-    .small {
-      font-size: 0.9rem;
-      color: #8c7a81;
-      margin-top: 12px;
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 28px;
+      transform: translateX(-50%) translateY(20px);
+      background: rgba(62, 44, 51, 0.92);
+      color: #fff;
+      padding: 12px 18px;
+      border-radius: 999px;
+      font-size: 0.92rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.25s ease;
+      z-index: 2001;
+      white-space: nowrap;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(20, 12, 16, 0.9);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 2000;
+    }
+
+    .lightbox.show {
+      display: flex;
+    }
+
+    .lightbox-content {
+      position: relative;
+      width: 100%;
+      max-width: 520px;
+    }
+
+    .lightbox img {
+      width: 100%;
+      max-height: 82vh;
+      object-fit: contain;
+      border-radius: 18px;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.28);
+      background: #fff;
+    }
+
+    .lightbox-close {
+      position: absolute;
+      top: -14px;
+      right: -2px;
+      width: 38px;
+      height: 38px;
+      border: none;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.92);
+      color: #513d44;
+      font-size: 1.3rem;
+      cursor: pointer;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.18);
     }
 
     @media (max-width: 420px) {
@@ -319,19 +453,39 @@
       .btn-group {
         grid-template-columns: 1fr;
       }
+
+      .music-controller {
+        top: 10px;
+        right: 10px;
+      }
+
+      .music-btn {
+        font-size: 0.85rem;
+        padding: 9px 12px;
+      }
     }
   </style>
 </head>
 <body>
   <div class="petals" id="petals"></div>
 
+  <div class="music-controller">
+    <button id="musicToggle" class="music-btn" type="button" aria-label="배경음악 재생 또는 정지">
+      ♪ 음악 켜기
+    </button>
+  </div>
+
+  <audio id="bgm" loop autoplay playsinline webkit-playsinline preload="auto">
+    <source src="music/bgm.mp3" type="audio/mpeg" />
+  </audio>
+
   <div class="wrap">
     <section class="hero">
-      <img src="images/main.jpg" alt="메인 웨딩 사진" onerror="this.src='https://placehold.co/800x1200?text=MAIN+PHOTO';" />
+      <img src="images/main.jpg" alt="메인 웨딩 사진" />
       <div class="hero-text">
         <div class="hero-sub">WEDDING INVITATION</div>
         <h1 class="hero-title">호중 ♥ 혜림</h1>
-        <div class="hero-date">2026년 5월 16일 토요일 오후 1시</div>
+        <div class="hero-date">2026년 5월 3일 일요일 오후 2시</div>
       </div>
     </section>
 
@@ -348,7 +502,7 @@
 
       <div class="names">
         신랑 <strong>이호중</strong><br />
-        신부 <strong>김혜림</strong>
+        신부 <strong>박혜림</strong>
       </div>
     </section>
 
@@ -357,7 +511,7 @@
       <div class="title">예식 안내</div>
       <div class="calendar-box">
         <div class="calendar-month">2026. 05</div>
-        <div class="calendar-date-main">5월 16일 토요일 오후 1시</div>
+        <div class="calendar-date-main">5월 3일 일요일 오후 2시</div>
         <div class="calendar-desc">봄의 한가운데에서, 저희의 시작을 함께해 주세요.</div>
       </div>
     </section>
@@ -368,20 +522,20 @@
       <div class="info-card">
         <div class="info-row">
           <div class="label">장소</div>
-          <div class="value">라벨르웨딩홀 3층 플로렌스홀</div>
+          <div class="value">호텔수성 3층 피오니홀</div>
         </div>
         <div class="info-row">
           <div class="label">주소</div>
-          <div class="value">대구광역시 ○○구 ○○로 123</div>
+          <div class="value">대구광역시 수성구 용학로 106-7</div>
         </div>
         <div class="info-row">
           <div class="label">안내</div>
-          <div class="value">주차 가능 / 지하철 ○○역 2번 출구 도보 5분</div>
+          <div class="value">주차 가능 / 지하철 수성못역 1번 출구 도보 25분</div>
         </div>
 
         <div class="btn-group">
-          <a class="btn primary" href="https://map.kakao.com/link/search/대구광역시%20○○구%20○○로%20123" target="_blank" rel="noopener">카카오맵</a>
-          <a class="btn" href="https://map.naver.com/p/search/대구광역시%20○○구%20○○로%20123" target="_blank" rel="noopener">네이버지도</a>
+          <a class="btn primary" href="https://map.kakao.com/link/search/호텔수성" target="_blank" rel="noopener">카카오맵</a>
+          <a class="btn" href="https://map.naver.com/p/search/호텔수성" target="_blank" rel="noopener">네이버지도</a>
         </div>
       </div>
     </section>
@@ -390,14 +544,86 @@
       <div class="flower">❀</div>
       <div class="title">갤러리</div>
       <div class="gallery">
-        <img src="images/photo1.jpg" alt="웨딩 사진 1" loading="lazy" onerror="this.src='https://placehold.co/600x800?text=PHOTO+1';" />
-        <img src="images/photo2.jpg" alt="웨딩 사진 2" loading="lazy" onerror="this.src='https://placehold.co/600x800?text=PHOTO+2';" />
-        <img src="images/photo3.jpg" alt="웨딩 사진 3" loading="lazy" onerror="this.src='https://placehold.co/600x800?text=PHOTO+3';" />
-        <img src="images/photo4.jpg" alt="웨딩 사진 4" loading="lazy" onerror="this.src='https://placehold.co/600x800?text=PHOTO+4';" />
-        <img src="images/photo5.jpg" alt="웨딩 사진 5" loading="lazy" onerror="this.src='https://placehold.co/600x800?text=PHOTO+5';" />
-        <img src="images/photo6.jpg" alt="웨딩 사진 6" loading="lazy" onerror="this.src='https://placehold.co/600x800?text=PHOTO+6';" />
+        <button class="gallery-item" type="button" data-full="images/photo1.jpg"><img src="images/photo1.jpg" alt="웨딩 사진 1" loading="lazy" /></button>
+        <button class="gallery-item" type="button" data-full="images/photo2.jpg"><img src="images/photo2.jpg" alt="웨딩 사진 2" loading="lazy" /></button>
+        <button class="gallery-item" type="button" data-full="images/photo3.jpg"><img src="images/photo3.jpg" alt="웨딩 사진 3" loading="lazy" /></button>
+        <button class="gallery-item" type="button" data-full="images/photo4.jpg"><img src="images/photo4.jpg" alt="웨딩 사진 4" loading="lazy" /></button>
+        <button class="gallery-item" type="button" data-full="images/photo5.jpg"><img src="images/photo5.jpg" alt="웨딩 사진 5" loading="lazy" /></button>
+        <button class="gallery-item" type="button" data-full="images/photo6.jpg"><img src="images/photo6.jpg" alt="웨딩 사진 6" loading="lazy" /></button>
+        <button class="gallery-item" type="button" data-full="images/photo7.jpg"><img src="images/photo7.jpg" alt="웨딩 사진 7" loading="lazy" /></button>
+        <button class="gallery-item" type="button" data-full="images/photo8.jpg"><img src="images/photo8.jpg" alt="웨딩 사진 8" loading="lazy" /></button>
+        <button class="gallery-item" type="button" data-full="images/photo9.jpg"><img src="images/photo9.jpg" alt="웨딩 사진 9" loading="lazy" /></button>
+        <button class="gallery-item" type="button" data-full="images/photo10.jpg"><img src="images/photo10.jpg" alt="웨딩 사진 10" loading="lazy" /></button>
+        <button class="gallery-item" type="button" data-full="images/photo11.jpg"><img src="images/photo11.jpg" alt="웨딩 사진 11" loading="lazy" /></button>
+        <button class="gallery-item" type="button" data-full="images/photo12.jpg"><img src="images/photo12.jpg" alt="웨딩 사진 12" loading="lazy" /></button>
+        <button class="gallery-item" type="button" data-full="images/photo13.jpg"><img src="images/photo13.jpg" alt="웨딩 사진 13" loading="lazy" /></button>
+        <button class="gallery-item" type="button" data-full="images/photo14.jpg"><img src="images/photo14.jpg" alt="웨딩 사진 14" loading="lazy" /></button>
+        <button class="gallery-item" type="button" data-full="images/photo15.jpg"><img src="images/photo15.jpg" alt="웨딩 사진 15" loading="lazy" /></button>
       </div>
-      <div class="small">사진 파일명을 맞춰 넣으면 자동으로 표시된다.</div>
+      <div class="small">사진을 누르면 크게 볼 수 있습니다.</div>
+    </section>
+
+    <section class="section">
+      <div class="flower">❀</div>
+      <div class="title">마음 전하실 곳</div>
+
+      <div class="account-box">
+        <div class="account-card">
+          <div class="account-title">신랑 계좌</div>
+          <div class="account-name">이호중 · 신한은행</div>
+          <div class="account-number">110-377-312681</div>
+          <div class="account-actions">
+            <button class="account-action copy-btn" type="button" data-copy="110-377-312681">계좌번호 복사</button>
+          </div>
+        </div>
+
+        <div class="account-card">
+          <div class="account-title">신랑 아버님 계좌</div>
+          <div class="account-name">이응도 · 농협</div>
+          <div class="account-number">111-2222-3333-44</div>
+          <div class="account-actions">
+            <button class="account-action copy-btn" type="button" data-copy="111-2222-3333-44">계좌번호 복사</button>
+          </div>
+        </div>
+
+        <div class="account-card">
+          <div class="account-title">신랑 어머님 계좌</div>
+          <div class="account-name">안미경 · 우리은행</div>
+          <div class="account-number">1002-123-456789</div>
+          <div class="account-actions">
+            <button class="account-action copy-btn" type="button" data-copy="1002-123-456789">계좌번호 복사</button>
+          </div>
+        </div>
+
+        <div class="account-card">
+          <div class="account-title">신부 계좌</div>
+          <div class="account-name">박혜림 · 우리은행</div>
+          <div class="account-number">1002-855-839785</div>
+          <div class="account-actions">
+            <button class="account-action copy-btn" type="button" data-copy="1002-855-839785">계좌번호 복사</button>
+          </div>
+        </div>
+
+        <div class="account-card">
+          <div class="account-title">신부 아버님 계좌</div>
+          <div class="account-name">박승태 · 신한은행</div>
+          <div class="account-number">602-06-146036</div>
+          <div class="account-actions">
+            <button class="account-action copy-btn" type="button" data-copy="602-06-146036">계좌번호 복사</button>
+          </div>
+        </div>
+
+        <div class="account-card">
+          <div class="account-title">신부 어머님 계좌</div>
+          <div class="account-name">조경숙 · 신한은행</div>
+          <div class="account-number">110-293-080446</div>
+          <div class="account-actions">
+            <button class="account-action copy-btn" type="button" data-copy="110-293-080446">계좌번호 복사</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="small">버튼을 누르면 계좌번호가 바로 복사됩니다.</div>
     </section>
 
     <section class="section">
@@ -408,20 +634,20 @@
         <div class="contact-item">
           <div class="contact-title">신랑측</div>
           <div class="contact-links">
-            <a class="contact-link" href="tel:01012345678">신랑 전화</a>
-            <a class="contact-link" href="sms:01012345678">문자 보내기</a>
-            <a class="contact-link" href="tel:01011112222">신랑 아버님</a>
-            <a class="contact-link" href="tel:01033334444">신랑 어머님</a>
+            <a class="contact-link" href="tel:01055971415">신랑 전화</a>
+            <a class="contact-link" href="sms:01055971415">문자 보내기</a>
+            <a class="contact-link" href="tel:01035341415">신랑 아버님</a>
+            <a class="contact-link" href="tel:01067831415">신랑 어머님</a>
           </div>
         </div>
 
         <div class="contact-item">
           <div class="contact-title">신부측</div>
           <div class="contact-links">
-            <a class="contact-link" href="tel:01087654321">신부 전화</a>
-            <a class="contact-link" href="sms:01087654321">문자 보내기</a>
-            <a class="contact-link" href="tel:01055556666">신부 아버님</a>
-            <a class="contact-link" href="tel:01077778888">신부 어머님</a>
+            <a class="contact-link" href="tel:01074647371">신부 전화</a>
+            <a class="contact-link" href="sms:01074647371">문자 보내기</a>
+            <a class="contact-link" href="tel:01074647371">신부 아버님</a>
+            <a class="contact-link" href="tel:01074647371">신부 어머님</a>
           </div>
         </div>
       </div>
@@ -432,6 +658,15 @@
       Hojoong ♥ Hyerim
     </footer>
   </div>
+
+  <div class="lightbox" id="lightbox" aria-hidden="true">
+    <div class="lightbox-content">
+      <button class="lightbox-close" id="lightboxClose" type="button" aria-label="닫기">×</button>
+      <img id="lightboxImage" src="" alt="확대 사진" />
+    </div>
+  </div>
+
+  <div class="toast" id="toast">복사되었습니다.</div>
 
   <script>
     const petalsWrap = document.getElementById("petals");
@@ -455,6 +690,145 @@
 
       petalsWrap.appendChild(petal);
     }
+
+    const lightbox = document.getElementById("lightbox");
+    const lightboxImage = document.getElementById("lightboxImage");
+    const lightboxClose = document.getElementById("lightboxClose");
+    const galleryItems = document.querySelectorAll(".gallery-item");
+    const toast = document.getElementById("toast");
+
+    function openLightbox(src, alt) {
+      lightboxImage.src = src;
+      lightboxImage.alt = alt || "확대 사진";
+      lightbox.classList.add("show");
+      lightbox.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeLightbox() {
+      lightbox.classList.remove("show");
+      lightbox.setAttribute("aria-hidden", "true");
+      lightboxImage.src = "";
+      document.body.style.overflow = "";
+    }
+
+    galleryItems.forEach((item) => {
+      item.addEventListener("click", () => {
+        const fullSrc = item.dataset.full;
+        const img = item.querySelector("img");
+        openLightbox(fullSrc, img ? img.alt : "확대 사진");
+      });
+    });
+
+    lightboxClose.addEventListener("click", closeLightbox);
+    lightbox.addEventListener("click", (e) => {
+      if (e.target === lightbox) {
+        closeLightbox();
+      }
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        closeLightbox();
+      }
+    });
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add("show");
+      clearTimeout(window.__toastTimer);
+      window.__toastTimer = setTimeout(() => {
+        toast.classList.remove("show");
+      }, 1800);
+    }
+
+    async function copyText(text) {
+      try {
+        await navigator.clipboard.writeText(text);
+        showToast("계좌번호가 복사되었습니다.");
+      } catch (error) {
+        const temp = document.createElement("input");
+        temp.value = text;
+        document.body.appendChild(temp);
+        temp.select();
+        document.execCommand("copy");
+        document.body.removeChild(temp);
+        showToast("계좌번호가 복사되었습니다.");
+      }
+    }
+
+    document.querySelectorAll(".copy-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        copyText(btn.dataset.copy);
+      });
+    });
+
+    const bgm = document.getElementById("bgm");
+    const musicToggle = document.getElementById("musicToggle");
+    let isPlaying = false;
+    bgm.volume = 0.5;
+
+    function setMusicButtonState(playing) {
+      if (playing) {
+        musicToggle.textContent = "❚❚ 음악 끄기";
+        musicToggle.classList.add("playing");
+      } else {
+        musicToggle.textContent = "♪ 음악 켜기";
+        musicToggle.classList.remove("playing");
+      }
+    }
+
+    async function playMusic() {
+      try {
+        await bgm.play();
+        isPlaying = true;
+        setMusicButtonState(true);
+      } catch (error) {
+        isPlaying = false;
+        setMusicButtonState(false);
+      }
+    }
+
+    function pauseMusic() {
+      bgm.pause();
+      isPlaying = false;
+      setMusicButtonState(false);
+    }
+
+    musicToggle.addEventListener("click", async () => {
+      if (isPlaying) {
+        pauseMusic();
+      } else {
+        await playMusic();
+      }
+    });
+
+    window.addEventListener("load", async () => {
+      await playMusic();
+    });
+
+    async function tryPlayOnce() {
+      if (!isPlaying) {
+        await playMusic();
+      }
+      document.removeEventListener("touchstart", tryPlayOnce);
+      document.removeEventListener("click", tryPlayOnce);
+      document.removeEventListener("scroll", tryPlayOnce);
+    }
+
+    document.addEventListener("touchstart", tryPlayOnce, { passive: true });
+    document.addEventListener("click", tryPlayOnce);
+    document.addEventListener("scroll", tryPlayOnce, { passive: true });
+
+    bgm.addEventListener("play", () => {
+      isPlaying = true;
+      setMusicButtonState(true);
+    });
+
+    bgm.addEventListener("pause", () => {
+      isPlaying = false;
+      setMusicButtonState(false);
+    });
   </script>
 </body>
 </html>
