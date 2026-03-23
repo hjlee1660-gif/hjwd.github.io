@@ -719,6 +719,7 @@
       white-space: pre-line;
       line-height: 1.6;
       margin-bottom: 12px;
+      word-break: break-word;
     }
 
     .guestbook-item-actions {
@@ -1028,8 +1029,8 @@
           </div>
 
           <div class="guestbook-help">
-            작성한 글은 모든 방문자에게 보입니다.<br />
-            글 수정과 삭제는 입력한 비밀번호가 일치할 때만 가능합니다.
+            작성한 글은 모든 방문자에게 공개됩니다.<br />
+            수정과 삭제는 작성 시 입력한 비밀번호가 일치할 때만 가능합니다.
           </div>
         </div>
 
@@ -1065,27 +1066,26 @@
   <div class="toast" id="toast">복사되었습니다.</div>
 
   <script>
-    /* =========================
+    /* =========================================
        Firebase 설정
-       =========================
-       아래 값은 본인 Firebase 프로젝트 값으로 교체
-    */
+       반드시 본인 프로젝트 값으로 바꿔야 작동함
+    ========================================= */
     const firebaseConfig = {
       apiKey: "여기에_API_KEY",
-      authDomain: "여기에_PROJECT_ID.firebaseapp.com",
-      projectId: "여기에_PROJECT_ID",
-      storageBucket: "여기에_PROJECT_ID.appspot.com",
-      messagingSenderId: "여기에_SENDER_ID",
-      appId: "여기에_APP_ID"
+      authDomain: "hjwd-c63dc.firebaseapp.com",
+      projectId: "hjwd-c63dc",
+      storageBucket: "hjwd-c63dc.appspot.com",
+      messagingSenderId: "830320616519",
+      appId: "1:830320616519:android:0017180bba340611627d62"
     };
 
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
     const guestbookCollection = db.collection("guestbook");
 
-    /* =========================
-       공통 UI
-       ========================= */
+    /* =========================================
+       꽃잎 효과
+    ========================================= */
     const petalsWrap = document.getElementById("petals");
 
     for (let i = 0; i < 22; i++) {
@@ -1108,6 +1108,9 @@
       petalsWrap.appendChild(petal);
     }
 
+    /* =========================================
+       토스트
+    ========================================= */
     const toast = document.getElementById("toast");
 
     function showToast(message) {
@@ -1119,6 +1122,9 @@
       }, 1800);
     }
 
+    /* =========================================
+       복사
+    ========================================= */
     async function copyText(text) {
       try {
         await navigator.clipboard.writeText(text);
@@ -1140,9 +1146,9 @@
       });
     });
 
-    /* =========================
+    /* =========================================
        음악
-       ========================= */
+    ========================================= */
     const bgm = document.getElementById("bgm");
     const musicToggle = document.getElementById("musicToggle");
     let isPlaying = false;
@@ -1210,9 +1216,9 @@
       setMusicButtonState(false);
     });
 
-    /* =========================
+    /* =========================================
        네이버 지도
-       ========================= */
+    ========================================= */
     function setMapFallback(message) {
       const mapEl = document.getElementById("naverMap");
       mapEl.innerHTML = `
@@ -1273,9 +1279,9 @@
       setTimeout(initNaverMap, 300);
     });
 
-    /* =========================
+    /* =========================================
        갤러리 라이트박스
-       ========================= */
+    ========================================= */
     const lightbox = document.getElementById("lightbox");
     const lightboxClose = document.getElementById("lightboxClose");
     const lightboxPrev = document.getElementById("lightboxPrev");
@@ -1411,10 +1417,11 @@
       }
     });
 
-    /* =========================
-       방명록 - Firestore 공유형
-       ========================= */
+    /* =========================================
+       방명록 공개형 Firestore
+    ========================================= */
     let guestbookPosts = [];
+    let isSubmittingGuestbook = false;
 
     function escapeHtml(text) {
       return String(text)
@@ -1450,7 +1457,7 @@
       const msgUint8 = new TextEncoder().encode(text);
       const hashBuffer = await crypto.subtle.digest("SHA-256", msgUint8);
       const hashArray = Array.from(new Uint8Array(hashBuffer));
-      return hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
+      return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
     }
 
     function closeAllGuestbookBoxes(currentItem = null) {
@@ -1475,11 +1482,11 @@
         return `
           <div class="guestbook-item" data-id="${post.id}">
             <div class="guestbook-item-top">
-              <div class="guestbook-name">${escapeHtml(post.name)}</div>
-              <div class="guestbook-date">${formatGuestbookDate(post.updatedAt || post.createdAt)}</div>
+              <div class="guestbook-name">${escapeHtml(post.name || "")}</div>
+              <div class="guestbook-date">${formatGuestbookDate(post.updatedAt || post.createdAtClient || post.createdAt)}</div>
             </div>
 
-            <div class="guestbook-message">${escapeHtml(post.message)}</div>
+            <div class="guestbook-message">${escapeHtml(post.message || "")}</div>
 
             <div class="guestbook-item-actions">
               <button class="guestbook-btn guestbook-edit-open" type="button">수정하기</button>
@@ -1489,12 +1496,12 @@
             <div class="guestbook-edit-box">
               <div class="guestbook-field">
                 <label class="guestbook-label">이름</label>
-                <input class="guestbook-input edit-name" type="text" maxlength="20" value="${escapeHtml(post.name)}" />
+                <input class="guestbook-input edit-name" type="text" maxlength="20" value="${escapeHtml(post.name || "")}" />
               </div>
 
               <div class="guestbook-field">
                 <label class="guestbook-label">남기실 말</label>
-                <textarea class="guestbook-textarea edit-message" maxlength="300">${escapeHtml(post.message)}</textarea>
+                <textarea class="guestbook-textarea edit-message" maxlength="300">${escapeHtml(post.message || "")}</textarea>
               </div>
 
               <div class="guestbook-field">
@@ -1554,16 +1561,14 @@
       document.querySelectorAll(".guestbook-cancel-edit").forEach((btn) => {
         btn.addEventListener("click", function () {
           const item = this.closest(".guestbook-item");
-          const editBox = item.querySelector(".guestbook-edit-box");
-          editBox.classList.remove("show");
+          item.querySelector(".guestbook-edit-box").classList.remove("show");
         });
       });
 
       document.querySelectorAll(".guestbook-cancel-delete").forEach((btn) => {
         btn.addEventListener("click", function () {
           const item = this.closest(".guestbook-item");
-          const deleteBox = item.querySelector(".guestbook-delete-box");
-          deleteBox.classList.remove("show");
+          item.querySelector(".guestbook-delete-box").classList.remove("show");
         });
       });
 
@@ -1573,7 +1578,7 @@
           const id = item.dataset.id;
           const newName = item.querySelector(".edit-name").value.trim();
           const newMessage = item.querySelector(".edit-message").value.trim();
-          const password = item.querySelector(".edit-password").value;
+          const password = item.querySelector(".edit-password").value.trim();
 
           if (!newName) {
             showToast("이름을 입력해 주세요.");
@@ -1622,7 +1627,7 @@
         btn.addEventListener("click", async function () {
           const item = this.closest(".guestbook-item");
           const id = item.dataset.id;
-          const password = item.querySelector(".delete-password").value;
+          const password = item.querySelector(".delete-password").value.trim();
 
           if (!password) {
             showToast("비밀번호를 입력해 주세요.");
@@ -1656,7 +1661,7 @@
 
     function subscribeGuestbook() {
       guestbookCollection
-        .orderBy("createdAt", "desc")
+        .orderBy("createdAtClient", "desc")
         .onSnapshot((snapshot) => {
           guestbookPosts = snapshot.docs.map((doc) => ({
             id: doc.id,
@@ -1666,18 +1671,20 @@
         }, (error) => {
           console.error(error);
           document.getElementById("guestbookList").innerHTML =
-            `<div class="guestbook-empty">방명록을 불러오지 못했습니다. Firebase 설정을 확인해 주세요.</div>`;
+            `<div class="guestbook-empty">방명록을 불러오지 못했습니다. Firebase 설정과 Firestore 규칙을 확인해 주세요.</div>`;
         });
     }
 
     document.getElementById("guestbookSubmit").addEventListener("click", async function () {
+      if (isSubmittingGuestbook) return;
+
       const nameEl = document.getElementById("guestName");
       const messageEl = document.getElementById("guestMessage");
       const passwordEl = document.getElementById("guestPassword");
 
       const name = nameEl.value.trim();
       const message = messageEl.value.trim();
-      const password = passwordEl.value;
+      const password = passwordEl.value.trim();
 
       if (!name) {
         showToast("이름을 입력해 주세요.");
@@ -1694,15 +1701,29 @@
         return;
       }
 
+      if (name.length > 20) {
+        showToast("이름은 20자 이하로 입력해 주세요.");
+        return;
+      }
+
+      if (message.length > 300) {
+        showToast("메시지는 300자 이하로 입력해 주세요.");
+        return;
+      }
+
       try {
+        isSubmittingGuestbook = true;
+
         const passwordHash = await sha256(password);
+        const now = new Date().toISOString();
 
         await guestbookCollection.add({
           name,
           message,
           passwordHash,
           createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+          createdAtClient: now
         });
 
         nameEl.value = "";
@@ -1713,6 +1734,8 @@
       } catch (error) {
         console.error(error);
         showToast("등록 중 오류가 발생했습니다.");
+      } finally {
+        isSubmittingGuestbook = false;
       }
     });
 
