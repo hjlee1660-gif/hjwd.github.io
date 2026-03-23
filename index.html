@@ -102,63 +102,59 @@
       z-index: 999;
     }
 
-    .sun-glow {
-      position: absolute;
-      top: -12vh;
-      right: -8vw;
-      width: 52vw;
-      height: 52vw;
-      max-width: 420px;
-      max-height: 420px;
-      border-radius: 50%;
-      background:
-        radial-gradient(circle,
-          rgba(255, 246, 210, 0.78) 0%,
-          rgba(255, 236, 170, 0.45) 24%,
-          rgba(255, 228, 150, 0.20) 45%,
-          rgba(255, 220, 120, 0.08) 60%,
-          rgba(255, 255, 255, 0) 75%);
-      filter: blur(10px);
-      animation: sunlightPulse 5.5s ease-in-out infinite;
-    }
+ .sun-glow {
+  position: absolute;
+  top: -12vh;
+  right: -8vw;
+  width: 52vw;
+  height: 52vw;
+  max-width: 420px;
+  max-height: 420px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle,
+      rgba(255, 248, 220, 0.45) 0%,   /* 밝기 ↓ */
+      rgba(255, 240, 200, 0.25) 30%,
+      rgba(255, 235, 180, 0.12) 55%,
+      rgba(255,255,255,0) 75%);
+  filter: blur(18px);   /* 퍼짐 증가 */
+  animation: sunlightSoft 8s ease-in-out infinite;
+}
 
-    .sunbeam {
-      position: absolute;
-      top: -18vh;
-      right: 4vw;
-      width: 140px;
-      height: 140vh;
-      transform-origin: top center;
-      background: linear-gradient(
-        to bottom,
-        rgba(255, 245, 200, 0.34) 0%,
-        rgba(255, 241, 190, 0.18) 32%,
-        rgba(255, 246, 220, 0.06) 68%,
-        rgba(255, 255, 255, 0) 100%
-      );
-      filter: blur(10px);
-      border-radius: 999px;
-      mix-blend-mode: screen;
-    }
+.sunbeam {
+  position: absolute;
+  top: -18vh;
+  right: 4vw;
+  width: 120px;
+  height: 140vh;
+  transform-origin: top center;
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 245, 210, 0.18) 0%,   /* 강도 ↓↓↓ */
+    rgba(255, 240, 200, 0.10) 40%,
+    rgba(255, 245, 220, 0.04) 70%,
+    rgba(255,255,255,0) 100%
+  );
+  filter: blur(14px);   /* 더 부드럽게 */
+  border-radius: 999px;
+  mix-blend-mode: screen;
+}
 
-    .beam1 {
-      transform: rotate(18deg);
-      opacity: 0.9;
-    }
+.beam1 { opacity: 0.5; }
+.beam2 { opacity: 0.35; }
+.beam3 { opacity: 0.25; }
 
-    .beam2 {
-      right: 12vw;
-      width: 110px;
-      transform: rotate(28deg);
-      opacity: 0.55;
-    }
-
-    .beam3 {
-      right: -1vw;
-      width: 88px;
-      transform: rotate(9deg);
-      opacity: 0.45;
-    }
+/* 애니메이션도 부드럽게 */
+@keyframes sunlightSoft {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scale(1.03);
+    opacity: 0.85;
+  }
+}
 
     .dusts {
       position: absolute;
@@ -581,14 +577,19 @@
       z-index: 1;
     }
 
-    .contact-links,
-    .account-actions {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      position: relative;
-      z-index: 1;
-    }
+   .contact-links {
+  display: flex;
+  justify-content: center;  /* 가운데 정렬 핵심 */
+  align-items: center;
+  gap: 12px;
+  flex-wrap: nowrap;        /* 한 줄 유지 */
+}
+
+.contact-link {
+  display: inline-block;
+  text-align: center;
+  white-space: nowrap;
+}
 
     .account-name,
     .parent-name-bank {
@@ -610,16 +611,103 @@
       z-index: 1;
     }
 
-    .parent-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-top: 12px;
-      position: relative;
-      z-index: 1;
-    }
+.parent-grid.single-column {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
 
-    .parent-role {
+.parent-item.inline-row {
+  display: grid;
+  grid-template-columns: 50px 1fr auto;
+  align-items: center;
+  column-gap: 6px;   /* 신한은행과 버튼 간격 축소 */
+  row-gap: 0;
+
+  padding: 10px 12px; /* 전체 카드도 약간 슬림 */
+  border-radius: 12px;
+  background: #fff;
+
+  width: 100%;
+  box-sizing: border-box;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+  /* 한줄 강제 핵심 */
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.parent-role {
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-align: center;
+  color: #aa6f85;
+  margin-bottom: 0;
+  line-height: 1.2;
+}
+
+.parent-name-bank {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-bottom: 0;
+  font-size: 0.96rem;
+  color: #785f61;
+  line-height: 1.2;
+  padding-right: 2px; /* 버튼과 너무 붙지 않게 최소만 */
+}
+
+.copy-btn {
+  white-space: nowrap;
+  padding: 5px 9px;   /* 버튼 슬림화 */
+  min-height: 28px;
+  font-size: 0.78rem;
+  line-height: 1;
+  border-radius: 999px;
+  margin: 0;
+  align-self: center;
+}
+
+/* 모바일 */
+@media (max-width: 768px) {
+  .parent-item.inline-row {
+    grid-template-columns: 40px 1fr;
+    grid-template-areas:
+      "role name"
+      "button button";
+  }
+
+  .parent-role { grid-area: role; }
+  .parent-name-bank { grid-area: name; }
+  .copy-btn {
+    grid-area: button;
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .parent-item.inline-row {
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .parent-item.inline-row .parent-role {
+    min-width: 36px;
+  }
+
+  .parent-item.inline-row .parent-name-bank,
+  .parent-item.inline-row .parent-account {
+    min-width: auto;
+  }
+
+  .parent-item.inline-row .copy-btn {
+    margin-left: 0;
+    width: 100%;
+  }
+}    .parent-role {
       font-size: 0.9rem;
       font-weight: 700;
       color: #aa6f85;
@@ -1107,82 +1195,59 @@
       <div class="flower">❀</div>
       <div class="title">마음 전하실 곳</div>
 
-      <div class="account-box">
-        <div class="account-card">
-          <div class="account-title">신랑 계좌</div>
-          <div class="parent-grid">
-            <div class="parent-item">
-              <div class="parent-role">신랑</div>
-              <div class="parent-name-bank">이호중 · 신한은행</div>
-              <div class="parent-account">110-377-312681</div>
-              <div class="parent-copy">
-                <button class="account-action copy-btn" type="button" data-copy="110-377-312681">계좌번호 복사</button>
-              </div>
-            </div>
-          </div>
-        </div>
+<div class="account-box">
 
-        <div class="account-card">
-          <div class="account-title">신랑 부모님 계좌</div>
-          <div class="parent-grid">
-            <div class="parent-item">
-              <div class="parent-role">아버님</div>
-              <div class="parent-name-bank">이응도 · 국민은행</div>
-              <div class="parent-account">102-01-0732-151</div>
-              <div class="parent-copy">
-                <button class="account-action copy-btn" type="button" data-copy="102-01-0732-151">계좌번호 복사</button>
-              </div>
-            </div>
+  <!-- 신랑측 -->
+  <div class="account-card">
+    <div class="account-title">신랑측</div>
 
-            <div class="parent-item">
-              <div class="parent-role">어머님</div>
-              <div class="parent-name-bank">안미경 · im뱅크</div>
-              <div class="parent-account">508-12-697427-2</div>
-              <div class="parent-copy">
-                <button class="account-action copy-btn" type="button" data-copy="508-12-697427-2">계좌번호 복사</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="account-card">
-          <div class="account-title">신부 계좌</div>
-          <div class="parent-grid">
-            <div class="parent-item">
-              <div class="parent-role">신부</div>
-              <div class="parent-name-bank">박혜림 · 우리은행</div>
-              <div class="parent-account">1002-855-839785</div>
-              <div class="parent-copy">
-                <button class="account-action copy-btn" type="button" data-copy="1002-855-839785">계좌번호 복사</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="account-card">
-          <div class="account-title">신부 부모님 계좌</div>
-          <div class="parent-grid">
-            <div class="parent-item">
-              <div class="parent-role">아버님</div>
-              <div class="parent-name-bank">박승태 · 신한은행</div>
-              <div class="parent-account">602-06-146036</div>
-              <div class="parent-copy">
-                <button class="account-action copy-btn" type="button" data-copy="602-06-146036">계좌번호 복사</button>
-              </div>
-            </div>
-
-            <div class="parent-item">
-              <div class="parent-role">어머님</div>
-              <div class="parent-name-bank">조경숙 · 신한은행</div>
-              <div class="parent-account">110-293-080446</div>
-              <div class="parent-copy">
-                <button class="account-action copy-btn" type="button" data-copy="110-293-080446">계좌번호 복사</button>
-              </div>
-            </div>
-          </div>
-        </div>
+    <div class="parent-grid single-column">
+      <div class="parent-item inline-row">
+        <div class="parent-role">신랑</div>
+        <div class="parent-name-bank">이호중 · 신한은행</div>
+        <button class="account-action copy-btn" type="button" data-copy="110-377-312681">계좌번호 복사</button>
       </div>
 
+      <div class="parent-item inline-row">
+        <div class="parent-role">부</div>
+        <div class="parent-name-bank">이응도 · 국민은행</div>
+        <button class="account-action copy-btn" type="button" data-copy="102-01-0732-151">계좌번호 복사</button>
+      </div>
+
+      <div class="parent-item inline-row">
+        <div class="parent-role">모</div>
+        <div class="parent-name-bank">안미경 · im뱅크</div>
+        <button class="account-action copy-btn" type="button" data-copy="508-12-697427-2">계좌번호 복사</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 신부측 -->
+  <div class="account-card">
+    <div class="account-title">신부측</div>
+
+    <div class="parent-grid single-column">
+      <div class="parent-item inline-row">
+        <div class="parent-role">신부</div>
+        <div class="parent-name-bank">박혜림 · 우리은행</div>
+        <button class="account-action copy-btn" type="button" data-copy="1002-855-839785">계좌번호 복사</button>
+      </div>
+
+      <div class="parent-item inline-row">
+        <div class="parent-role">부</div>
+        <div class="parent-name-bank">박승태 · 신한은행</div>
+        <button class="account-action copy-btn" type="button" data-copy="602-06-146036">계좌번호 복사</button>
+      </div>
+
+      <div class="parent-item inline-row">
+        <div class="parent-role">모</div>
+        <div class="parent-name-bank">조경숙 · 신한은행</div>
+        <button class="account-action copy-btn" type="button" data-copy="110-293-080446">계좌번호 복사</button>
+      </div>
+    </div>
+  </div>
+
+</div>
       <div class="small">버튼을 누르면 계좌번호가 바로 복사됩니다.</div>
     </section>
 
