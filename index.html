@@ -272,17 +272,29 @@
       pointer-events: none;
     }
 
-    .hero-text {
-      position: absolute;
-      left: 24px;
-      right: 24px;
-      bottom: 34px;
-      z-index: 3;
-      color: #fffdfc;
-      text-align: center;
-      text-shadow: 0 2px 10px rgba(80, 42, 52, 0.22);
-    }
+.hero-text {
+  position: absolute;
+  left: 24px;
+  right: 24px;
+  bottom: 34px;
+  z-index: 3;
 
+  /* 🔥 핵심 변경 */
+  color: #000;
+  text-shadow: none;
+  text-align: center;
+
+  /* 🔥 반투명 흰 배경 */
+  background: rgba(255, 255, 255, 0.5);
+  padding: 18px 20px;
+  border-radius: 14px;
+
+
+  /* 약간 고급스럽게 */
+  backdrop-filter: blur(4px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+  border: 1px solid rgba(0,0,0,0.06);
+}
     .hero-sub {
       font-size: 0.9rem;
       letter-spacing: 0.22em;
@@ -292,7 +304,7 @@
 
     .hero-title {
       font-size: 2.15rem;
-      font-weight: 700;
+      font-weight: 800;
       letter-spacing: 0.08em;
       margin: 0 0 12px;
       font-family: "Nanum Myeongjo", serif;
@@ -321,7 +333,7 @@
 
     .title {
       font-size: 1.48rem;
-      font-weight: 700;
+      font-weight: 800;
       color: #77575a;
       margin-bottom: 18px;
       font-family: "Nanum Myeongjo", serif;
@@ -987,8 +999,9 @@
       <div class="hero-text">
         <div class="hero-sub">WEDDING INVITATION</div>
         <h1 class="hero-title">호중 ♥ 혜림</h1>
+<div class="hero-date">호텔수성 피오니홀      
         <div class="hero-date">2026년 5월 3일 일요일 오후 2시</div>
-      </div>
+</div>
     </section>
 
     <section class="section">
