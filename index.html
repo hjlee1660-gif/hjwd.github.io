@@ -421,6 +421,31 @@
       color: #634f50;
       position: relative;
       z-index: 1;
+      display: inline-block;
+      text-align: left;
+    }
+
+    .name-line {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+      white-space: nowrap;
+    }
+
+    .name-prefix {
+      flex: 1;
+    }
+
+    .name-value {
+      min-width: 3.8em;
+      text-align: right;
+      font-weight: 700;
+    }
+
+    .name-dream {
+      text-align: center;
+      margin-top: 10px;
     }
 
     .calendar-date-main {
@@ -566,6 +591,19 @@
       margin-top: 18px;
       position: relative;
       z-index: 1;
+    }
+
+    .btn-group.map-links {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .btn-group.map-links .btn {
+      min-width: 0;
+      padding: 0 10px;
+      font-size: 0.88rem;
+      border-color: #e6becb;
+      background: linear-gradient(180deg, #f8e2e9 0%, #f1cfd9 100%);
+      color: #6b4d43;
     }
 
     .btn,
@@ -1101,6 +1139,16 @@
       .lightbox-next { right: 2px; }
       .lightbox-counter { bottom: -30px; }
     }
+  
+
+    @media (max-width: 420px) {
+      .btn-group.map-links .btn {
+        min-height: 46px;
+        font-size: 0.81rem;
+        padding: 0 6px;
+      }
+    }
+
   </style>
 </head>
 <body>
@@ -1184,8 +1232,15 @@
 큰 기쁨이 되겠습니다.</div>
 
         <div class="names">
-          신랑 <strong>이호중</strong> · 신부 <strong>박혜림</strong><br />
-          드림
+          <div class="name-line">
+            <span class="name-prefix">이응도·안미경의 아들</span>
+            <strong class="name-value">이호중</strong>
+          </div>
+          <div class="name-line">
+            <span class="name-prefix">박승태·조경숙의 딸</span>
+            <strong class="name-value">박혜림</strong>
+          </div>
+          <div class="name-dream">드림</div>
         </div>
       </div>
     </section>
@@ -1216,14 +1271,28 @@
 
         <div id="naverMap" class="map-box"></div>
 
-        <div class="btn-group">
+        <div class="btn-group map-links">
           <a
             class="btn primary"
             href="https://map.naver.com/p/search/%ED%98%B8%ED%85%94%EC%88%98%EC%84%B1"
             target="_blank"
             rel="noopener"
           >
-            네이버지도 앱에서 열기
+            네이버맵
+          </a>
+          <a
+            class="btn"
+            href="https://map.kakao.com/link/to/%ED%98%B8%ED%85%94%EC%88%98%EC%84%B1%203%EC%B8%B5%20%ED%94%BC%EC%98%A4%EB%8B%88%ED%99%80,35.8241852,128.6193978"
+            target="_blank"
+            rel="noopener"
+          >
+            카카오맵
+          </a>
+          <a
+            class="btn"
+            href="tmap://route?goalname=%ED%98%B8%ED%85%94%EC%88%98%EC%84%B1%203%EC%B8%B5%20%ED%94%BC%EC%98%A4%EB%8B%88%ED%99%80&goalx=128.6193978&goaly=35.8241852"
+          >
+            T맵
           </a>
         </div>
       </div>
@@ -1275,7 +1344,7 @@
                   <div class="account-name">부 이응도</div>
                   <div class="account-bank">국민은행 102-01-0732-151</div>
                 </div>
-                <button class="copy-btn" type="button" data-copy="국민은행 102-01-0732-151">신랑 아버님께 마음 전하기</button>
+                <button class="copy-btn" type="button" data-copy="국민은행 102-01-0732-151">신랑 아버지에게 마음 전하기</button>
               </div>
 
               <div class="account-row">
@@ -1283,7 +1352,7 @@
                   <div class="account-name">모 안미경</div>
                   <div class="account-bank">im뱅크(대구은행) 508-12-697427-2</div>
                 </div>
-                <button class="copy-btn" type="button" data-copy="im뱅크 508-12-697427-2">신랑 어머님께 마음 전하기</button>
+                <button class="copy-btn" type="button" data-copy="im뱅크 508-12-697427-2">신랑 어머니에게 마음 전하기</button>
               </div>
             </div>
           </div>
@@ -1306,7 +1375,7 @@
                   <div class="account-name">부 박승태</div>
                   <div class="account-bank">신한은행 602-06-146036</div>
                 </div>
-                <button class="copy-btn" type="button" data-copy="신한은행 602-06-146036">신부 아버님에게 마음 전하기</button>
+                <button class="copy-btn" type="button" data-copy="신한은행 602-06-146036">신부 아버지에게 마음 전하기</button>
               </div>
 
               <div class="account-row">
@@ -1314,7 +1383,7 @@
                   <div class="account-name">모 조경숙</div>
                   <div class="account-bank">신한은행 110-293-080446</div>
                 </div>
-                <button class="copy-btn" type="button" data-copy="신한은행 110-293-080446">신부 어머님에게 마음 전하기</button>
+                <button class="copy-btn" type="button" data-copy="신한은행 110-293-080446">신부 어머니에게 마음 전하기</button>
               </div>
             </div>
           </div>
